@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" xmlns:sec="http://www.w3.org/1999/xhtml"
+      layout:decorate="layout">
+<head th:replace="layout :: common-header">
+    <title>Daftar Pengguna Aplikasi</title>
+</head>
+<body>
+<div id="page-container" class="sidebar-o side-scroll page-header-fixed page-header-glass main-content-boxed side-trans-enabled sidebar-inverse">
+    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="fragments/control-sidebar"></div>
+    <div th:replace="fragments/sidebar"></div>
+
+
+    <!-- Main Container -->
+    <main id="main-container">
+        <div class="bg-image" style="background-image: url('/assets/img/photos/photo34@2x.jpg');">
+            <div class="bg-black-op-75">
+                <div class="content content-top content-full text-center">
+                    <div class="mb-20">
+                        <a class="img-link" th:href="@{/app/user/profile}">
+                            <img class="img-avatar img-avatar-thumb" th:src="@{/assets/img/avatars/avatar15.jpg}" alt="">
+                        </a>
+                    </div>
+                    <h1 class="h3 text-white font-w700 mb-10">
+                        <span th:text="${#request.userPrincipal.principal.firstName}"></span> <span th:text="${#request.userPrincipal.principal.lastName}"></span><i class="fa fa-star text-warning"></i>
+                    </h1>
+                    <h2 class="h5 text-white-op">Lokasi Kerja: <span th:text="${#request.userPrincipal.principal.masterLocation.locationName}"></span></h2>
+                </div>
+                </div>
+            </div>
+
+
+
+        <!-- Page Content -->
+        <div class="content">
+            <div class="block block-fx-shadow">
+                <div class="block-content">
+                    <!-- Personal Details -->
+                    <form action="be_pages_crypto_settings.html" method="post" onsubmit="return false;">
+                        <h2 class="content-heading text-black">Info Personal</h2>
+                        <div class="row items-push">
+                            <div class="col-lg-3">
+                                <p class="text-muted">
+                                    Ini adalah bagian menu untuk mengganti informasi personal kamu, isi dengan benar yah. Jangan pake nama yang alay, namu kamu itu punya makna yang bagus loh
+                                </p>
+                            </div>
+                            <div class="col-lg-7 offset-lg-1">
+                                <div class="form-group row">
+                                    <div class="col-6">
+                                        <label for="crypto-settings-firstname">Nama Depan</label>
+                                        <input type="text" class="form-control form-control-lg" id="crypto-settings-firstname" name="firstName" placeholder="Nama depan anda..."/>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="crypto-settings-lastname">Nama Belakang</label>
+                                        <input type="text" class="form-control form-control-lg" id="crypto-settings-lastname" name="lastName" placeholder="Nama belakang anda..."/>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="address">Alamat</label>
+                                        <textarea class="form-control" id="address" name="address" rows="5"
+                                                  placeholder="Alamat tempat tinggal"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-8">
+                                        <label for="crypto-settings-street-2">No Handphone</label>
+                                        <input type="text" class="form-control form-control-lg" id="crypto-settings-street-2" name="phoneNumber" placeholder="62 812 8884 4422">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-6">
+                                        <label for="example-datepicker6">Tanggal Lahir</label>
+                                        <input type="text" class="js-datepicker form-control" id="example-datepicker6"
+                                               name="dateOfBirth" data-week-start="1" data-autoclose="true"
+                                               data-today-highlight="true" data-date-format="yyyy/mm/dd"
+                                               placeholder="dd-mm-yyyy"/>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-6">
+                                        <label for="crypto-settings-postal">NIK</label>
+                                        <input type="text" class="form-control form-control-lg" id="crypto-settings-postal" name="crypto-settings-postal">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-alt-primary">Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- END Personal Details -->
+
+                    <!-- Change Password -->
+                    <form th:action="@{/app/user/change-password}" method="post" >
+                        <h2 class="content-heading text-black">Ganti Kata Sandi</h2>
+                        <div class="row items-push">
+                            <div class="col-lg-3">
+                                <p class="text-muted">
+                                    Gunakan kata sandi yang aman, jangan tanggal lahir, apalagi tanggal jadian kamu.
+                                </p>
+                            </div>
+                            <div class="col-lg-7 offset-lg-1">
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="crypto-settings-password">Kata sandi Saat ini</label>
+                                        <input type="password" class="form-control form-control-lg" id="crypto-settings-password" name="oldPassword">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="crypto-settings-password-new">Kata sandi baru</label>
+                                        <input type="password" class="form-control form-control-lg" id="crypto-settings-password-new" name="password">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="crypto-settings-password-new-confirm">Konfirmasi kata sandi baru</label>
+                                        <input type="password" class="form-control form-control-lg" id="crypto-settings-password-new-confirm" name="crypto-settings-password-new-confirm">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-alt-primary">Ganti, Sekarang!</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- END Change Password -->
+                </div>
+            </div>
+        </div>
+        <!-- END Page Content -->
+    </main>
+    <!-- END Main Container -->
+</div>        <!-- Terms Modal -->
+
+
+<div th:replace="layout :: body-bottom-scripts"/>
+<script th:src="@{/assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}"></script>
+
+<script th:src="@{/assets/js/plugins/select2/select2.full.min.js}"></script>
+<script th:src="@{/assets/js/plugins/jquery-validation/jquery.validate.min.js}"></script>
+<script th:src="@{/assets/js/plugins/jquery-validation/additional-methods.min.js}"></script>
+
+<!-- Page JS Code -->
+<script>
+    jQuery(function () {
+        // Init page helpers (Select2 plugin)
+        Codebase.helpers(['datepicker','select2', 'tags-inputs']);
+    });
+</script>
+<script th:src="@{/assets/js/pages/be_forms_validation.js}"></script>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="layout">
+<head th:replace="layout :: common-header">
+    <title>E-Customer Register</title>
+
+    <link rel="stylesheet" th:href="@{/assets/js/plugins/select2/select2.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/js/plugins/select2/select2-bootstrap.min.css}">
+
+</head>
+<body>
+<div id="page-container" class="sidebar-o sidebar-inverse side-scroll page-header-inverse main-content-boxed side-trans-enabled page-header-fixedr">
+    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="fragments/control-sidebar"></div>
+    <div th:replace="fragments/sidebar"></div>
+
+    <main id="main-container">
+        <!-- Page Content -->
+        <!-- jQuery Vide for video backgrounds, for more examples you can check out https://github.com/VodkaBears/Vide -->
+        <div class="bg-video" data-vide-bg="/assets/img/videos/city_night" data-vide-options="posterType: jpg">
+            <div class="hero bg-black-op">
+                <div class="hero-inner">
+                    <div class="content content-full text-center">
+                        <h1 class="display-4 font-w700 text-white mb-10">XaxxisID</h1>
+                        <h2 class="font-w400 text-white-op mb-50">Selamat datang, <span th:text="${#request.userPrincipal.principal.firstName}"></span> <span th:text="${#request.userPrincipal.principal.lastName}"></span></h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END Page Content -->
+
+        <!-- END Page Content -->
+    </main>
+    <!-- END Main Container -->
+</div>
+
+<div th:replace="layout :: page-footer"/>
+<div th:replace="layout :: body-bottom-scripts"/>
+<!-- Page JS Plugins -->
+
+<!-- Page Plugins -->
+<script th:src="@{/assets/js/plugins/jquery-vide/jquery.vide.min.js}"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,199 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="layout">
+<head th:replace="layout :: common-header">
+    <title>E-Customer Register</title>
+
+    <link rel="stylesheet" th:href="@{/assets/js/plugins/select2/select2.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/js/plugins/select2/select2-bootstrap.min.css}">
+
+</head>
+<body>
+<div id="page-container" class="sidebar-o sidebar-inverse side-scroll page-header-inverse main-content-boxed side-trans-enabled page-header-fixed">
+    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="fragments/control-sidebar"></div>
+    <div th:replace="fragments/sidebar"></div>
+
+    <main id="main-container">
+        <!-- Page Content -->
+        <div class="content">
+            <!-- Bootstrap Forms Validation -->
+            <h2 class="content-heading">Halaman Registrasi User Pengguna</h2>
+            <div class="block">
+                <div class="block-content">
+                    <div class="row">
+                        <div class="col-xl-auto">
+                            <!-- jQuery Validation (.js-validation-bootstrap class is initialized in js/pages/be_forms_validation.js) -->
+                            <!-- For more examples you can check out https://github.com/jzaefferer/jquery-validation -->
+                            <form class="validasi" th:autocomplete="off" data-parsley-validate="true" data-parsley-errors-messages-disabled="true" action="/app/user/register" method="post">
+                                <div class="row">
+                                    <div class="col-md-auto">
+                                        <h2 class="content-heading text-black">Personal Details</h2>
+                                        <div class="row">
+                                            <div class="col-xl-auto">
+                                                <div class="form-group row">
+                                                    <div class="col-5">
+                                                        <label for="firstName">Nama Depan</label>
+                                                        <input data-parsley-required="true" data-parsley-required-message="Wajib diisi" type="text" class="form-control" id="firstName" name="firstName"
+                                                               placeholder="Nama depan anda.."/>
+                                                    </div>
+                                                    <div class="col-7">
+                                                        <label for="lastname">Nama Belakang</label>
+                                                        <input data-parsley-required="true" data-parsley-required-message="wajib diisi" type="text" class="form-control" id="lastname" name="lastName"
+                                                               placeholder="Nama belakang anda.."/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="username">Username <span class="text-danger">*</span></label>
+                                            <div class="col-lg-8">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                                                <span class="input-group-text">
+                                                                                    <i class="fa fa-user"></i>
+                                                                                </span>
+                                                    </div>
+                                                    <input data-parsley-required="true" data-parsley-required-message="Wajib diisi" data-parsley-remote="http://localhost:5555/app/user/usernameCheck" data-parsley-remote-reverse="true" data-parsley-remote-message="Username sudah digunakan" type="text" class="form-control" id="username" name="username" placeholder="Username"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="email">Email <span class="text-danger">*</span></label>
+                                            <div class="col-lg-8">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                                                <span class="input-group-text">
+                                                                                    <i class="fa fa-envelope"></i>
+                                                                                </span>
+                                                    </div>
+                                                    <input data-parsley-required="true" data-parsley-remote="http://localhost:5555/app/user/emailCheck" data-parsley-remote-reverse="true" data-parsley-remote-message="Email sudah digunakan" type="email" class="form-control" id="email" name="email" placeholder="Email.."/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="password">Kata Sandi <span class="text-danger">*</span></label>
+                                            <div class="col-lg-8">
+                                                <div class="input-group">
+                                                    <input data-parsley-required="true" data-parsley-required-message="Password harus diisi" data-parsley-equalto="#confirm-password"	 type="password" class="form-control" id="password" name="password" placeholder="Ketik kata sandi.."/>
+                                                    <div class="input-group-append">
+                                                                                <span class="input-group-text">
+                                                                                    <i class="fa fa-asterisk"></i>
+                                                                                </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="confirm-password">Konfirmasi Kata Sandi <span class="text-danger">*</span></label>
+                                            <div class="col-lg-8">
+                                                <div class="input-group">
+                                                    <input data-parsley-required="true" data-parsley-required-message="Harus sama dengan kolom password" data-parsley-equalto="#password" type="password" class="form-control" id="confirm-password" name="confirm-password" placeholder="Ulangi kata sandi.."/>
+                                                    <div class="input-group-append">
+                                                                                <span class="input-group-text">
+                                                                                    <i class="fa fa-asterisk"></i>
+                                                                                </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-auto">
+                                        <h2 class="content-heading text-black">Security Details</h2>
+                                        <div class="form-group row">
+                                            <label class="col-12">Gambar Profile</label>
+                                            <div class="col-8">
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="image" name="image">
+                                                    <label class="custom-file-label" for="image">Pilih file</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val-select2">Lokasi Kerja <span class="text-danger">*</span></label>
+                                            <div class="col-lg-8">
+                                                <select data-parsley-required="true" data-parsley-required-message="Wajib pilih salah satu" class="js-select2 form-control" id="val-select2" name="masterLocation" style="width: 100%;" data-placeholder="Pilih salah satu..">
+                                                    <option></option>
+                                                    <option th:each="location : ${locationList}"
+                                                            th:value="${location.locationId}"
+                                                            th:text="${location.locationName}">
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="userRoles">Hak Akses <span class="text-danger">*</span></label>
+                                            <div class="col-lg-8">
+                                                <select th:required="true" class="js-select2 form-control" id="userRoles" name="roles" style="width: 100%;" data-placeholder="Pilih satu atau lebih.." th:multiple="multiple">
+                                                    <option></option>
+                                                    <option th:each="role : ${roleList}"
+                                                            th:value="${role.roleId}"
+                                                            th:text="${role.type}">
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label"><a data-toggle="modal" data-target="#modal-terms" href="#">Syarat &amp; Ketentuan</a> <span class="text-danger">*</span></label>
+                                            <div class="col-lg-8">
+                                                <label class="css-control css-control-primary css-checkbox" for="val-terms">
+                                                    <input th:required="true" data-parsley-required-message="Wajib disetujui" type="checkbox" class="css-control-input" id="val-terms" name="val-terms" value="1">
+                                                    <span class="css-control-indicator"></span> Saya setuju!
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" th:value="true" th:name="enabled"/>
+                                        <div class="form-group row">
+                                            <div class="col-lg-8 ml-auto">
+                                                <button type="submit" class="btn btn-alt-primary">Daftar User</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Bootstrap Forms Validation -->
+
+        </div>
+        <!-- END Page Content -->
+    </main>
+    <!-- END Main Container -->
+</div>
+
+<div th:replace="layout :: page-footer"/>
+<div th:replace="layout :: body-bottom-scripts"/>
+<!-- Page JS Plugins -->
+<script th:src="@{/assets/js/plugins/parsley/dist/parsley.min.js}"></script>
+<script th:src="@{/assets/js/plugins/parsley/dist/i18n/id.js}"></script>
+<script th:src="@{/assets/js/plugins/select2/select2.full.min.js}"></script>
+
+<!-- Page JS Code -->
+<script>
+    jQuery(function () {
+        Codebase.helpers(['select2', 'tags-inputs']);
+    });
+</script>
+<script type="text/javascript">
+    var $jnoc = jQuery.noConflict();
+    $jnoc(document).ready(function () {
+        $jnoc("#validasi").parsley();
+        window.Parsley.on('field:error', function (fieldInstance) {
+            fieldInstance.$element.popover({
+                trigger: 'manual',
+                container: 'body',
+                placement: 'left',
+                content: function () {
+                    return fieldInstance.getErrorsMessages().join(';');
+                }
+            }).popover('show');
+            setTimeout(function() {
+                fieldInstance.$element.popover('hide')},3000);
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,314 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="layout">
+<head th:replace="layout :: common-header">
+    <title>E-Customer Register</title>
+
+</head>
+<body>
+<div id="page-container" class="sidebar-o sidebar-inverse side-scroll page-header-glass page-header-inverse main-content-boxed side-trans-enabled">
+    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="fragments/control-sidebar"></div>
+    <div th:replace="fragments/sidebar"></div>
+
+    <main id="main-container" style="min-height: 630px;">
+        <div class="bg-image" th:style="'background-image: url(' + @{/assets/img/photos/photo26@2x.jpg} + ');'">
+            <div class="bg-black-op-75">
+                <div class="content content-top content-full text-center">
+                    <div class="py-20">
+                        <h1 class="h2 font-w700 text-white mb-10">Master Barang</h1>
+                        <h2 class="h4 font-w400 text-white-op mb-0">Anda berada dimenu Master Barang</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content">
+            <!-- Overview -->
+            <h2 class="content-heading">Overview</h2>
+            <div class="row gutters-tiny">
+                <!-- All Products -->
+                <div class="col-md-6 col-xl-3">
+                    <a class="block block-rounded block-link-shadow" href="javascript:void(0)">
+                        <div class="block-content block-content-full block-sticky-options">
+                            <div class="block-options">
+                                <div class="block-options-item">
+                                    <i class="fa fa-circle-o fa-2x text-info-light"></i>
+                                </div>
+                            </div>
+                            <div class="py-20 text-center">
+                                <div class="font-size-h2 font-w700 mb-0 text-info js-count-to-enabled" data-toggle="countTo" data-to="3580">3580</div>
+                                <div class="font-size-sm font-w600 text-uppercase text-muted">All Products</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <!-- END All Products -->
+
+                <!-- Top Sellers -->
+                <div class="col-md-6 col-xl-3">
+                    <a class="block block-rounded block-link-shadow" href="javascript:void(0)">
+                        <div class="block-content block-content-full block-sticky-options">
+                            <div class="block-options">
+                                <div class="block-options-item">
+                                    <i class="fa fa-star fa-2x text-warning-light"></i>
+                                </div>
+                            </div>
+                            <div class="py-20 text-center">
+                                <div class="font-size-h2 font-w700 mb-0 text-warning js-count-to-enabled" data-toggle="countTo" data-to="95">95</div>
+                                <div class="font-size-sm font-w600 text-uppercase text-muted">Top Sellers</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <!-- END Top Sellers -->
+
+                <!-- Out of Stock -->
+                <div class="col-md-6 col-xl-3">
+                    <a class="block block-rounded block-link-shadow" href="javascript:void(0)">
+                        <div class="block-content block-content-full block-sticky-options">
+                            <div class="block-options">
+                                <div class="block-options-item">
+                                    <i class="fa fa-warning fa-2x text-danger-light"></i>
+                                </div>
+                            </div>
+                            <div class="py-20 text-center">
+                                <div class="font-size-h2 font-w700 mb-0 text-danger js-count-to-enabled" data-toggle="countTo" data-to="30">30</div>
+                                <div class="font-size-sm font-w600 text-uppercase text-muted">Out of Stock</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <!-- END Out of Stock -->
+
+                <!-- Add Product -->
+                <div class="col-md-6 col-xl-3">
+                    <a class="block block-rounded block-link-shadow" data-toggle="modal" data-target="#modal-large">
+                        <div class="block-content block-content-full block-sticky-options">
+                            <div class="block-options">
+                                <div class="block-options-item">
+                                    <i class="fa fa-archive fa-2x text-success-light"></i>
+                                </div>
+                            </div>
+                            <div class="py-20 text-center">
+                                <div class="font-size-h2 font-w700 mb-0 text-success">
+                                    <i class="fa fa-plus"></i>
+                                </div>
+                                <div class="font-size-h4 font-w600 text-uppercase text-muted">Item Baru</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <!-- END Add Product -->
+            </div>
+            <!-- END Overview -->
+
+            <!-- Products -->
+            <div class="content-heading">
+                <div class="dropdown float-right">
+                    <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" id="ecom-products-filter-drop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        All
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="ecom-products-filter-drop">
+                        <a class="dropdown-item" href="javascript:void(0)">
+                            <i class="fa fa-fw fa-star text-warning mr-5"></i>Top Sellers
+                        </a>
+                        <a class="dropdown-item" href="javascript:void(0)">
+                            <i class="fa fa-fw fa-warning text-danger mr-5"></i>Out of Stock
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item active" href="javascript:void(0)">
+                            <i class="fa fa-fw fa-circle-o text-info mr-5"></i>All
+                        </a>
+                    </div>
+                </div>
+                <div class="dropdown float-right mr-5">
+                    <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" id="ecom-products-category-drop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Category
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="ecom-products-category-drop">
+                        <a class="dropdown-item" th:href="@{'/app/inv/warehouse'}">
+                            <i class="fa fa-fw fa-gamepad mr-5"></i>Semua
+                        </a>
+                        <a class="dropdown-item" th:href="@{'/app/inv/warehouse?by=Makanan'}">
+                            <i class="fa fa-fw fa-gamepad mr-5"></i>Makanan
+                        </a>
+                        <a class="dropdown-item" th:href="@{'/app/inv/warehouse?by=Minuman'}">
+                            <i class="fa fa-fw fa-desktop mr-5"></i>Minuman
+                        </a>
+                        <a class="dropdown-item" th:href="@{'/app/inv/warehouse?by=Makanan Ringan'}">
+                            <i class="fa fa-fw fa-mobile-phone mr-5"></i>Makanan Ringan
+                        </a>
+                        <a class="dropdown-item" th:href="@{'/app/inv/warehouse?by=Obat-obatan'}">
+                            <i class="fa fa-fw fa-heartbeat mr-5"></i>Obat-obatan
+                        </a>
+                        <a class="dropdown-item" th:href="@{'/app/inv/warehouse?by=Sanitasi'}">
+                            <i class="fa fa-fw fa-heartbeat mr-5"></i>Sanitasi
+                        </a>
+                    </div>
+                </div>
+                Daftar Inventory Barang
+            </div>
+            <div class="block block-rounded">
+                <div class="block-content">
+                    <!-- Products Table -->
+                    <table class="table table-borderless table-striped js-dataTable-full-pagination">
+                        <thead>
+                        <tr>
+                            <th style="display: none"></th>
+                            <th style="width: 100px;">Barcode</th>
+                            <th class="d-none d-sm-table-cell">Nama Barang</th>
+                            <th class="text-center">Unit</th>
+                            <th class="d-none d-md-table-cell text-center">Katergori</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="item : ${itemList}">
+                            <th style="display: none"></th>
+                            <td class="d-none d-sm-table-cell" th:text="${item.itemBarcode}"></td>
+                            <td class="d-none d-sm-table-cell" th:text="${item.itemName}"></td>
+                            <td class="text-center" th:text="${item.unitItem.unitName}"></td>
+                            <td class="d-none d-md-table-cell text-right" th:text="${item.categoryItem.categoryName}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <!-- END Products Table -->
+                </div>
+            </div>
+            <!-- END Products -->
+        </div>
+    </main>
+</div>
+
+<div th:replace="layout :: page-footer"/>
+
+<!-- Modal -->
+<div class="modal fade" id="modal-large" role="dialog" aria-labelledby="modal-large" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-popin" role="document">
+        <div class="modal-content">
+            <div class="block-content">
+                <form th:autocomplete="off" class="validasi" data-parsley-validate="true" data-parsley-errors-messages-disabled="true" action="/app/inv/item/create" method="post">
+                    <div class="block block-themed block-transparent mb-0">
+                        <div class="block-header bg-primary-dark">
+                            <h3 class="block-title">Item Baru</h3>
+                            <div class="block-options">
+                                <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                                    <i class="si si-close"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-auto">
+                                <h2 class="content-heading text-black">Item Details</h2>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group row">
+                                            <div class="col-12">
+                                                <label for="itemBarcode">Kode Barcode</label>
+                                                <input data-parsley-required="true" data-parsley-required-message="Wajib diisi" data-parsley-remote-reverse="true" data-parsley-remote-message="item dengan barcode ini sudah ada" data-parsley-remote="/app/inv/item/barcodeCheck" type="text" class="form-control" id="itemBarcode" name="itemBarcode"
+                                                       placeholder="Input kode barcode barang .."/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group row">
+                                            <div class="col-12">
+                                                <label for="itemName">Nama barang</label>
+                                                <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-archive"></i></span>
+                                                    <input data-parsley-required="true" data-parsley-required-message="Wajib diisi" type="text" class="form-control" id="itemName" name="itemName"
+                                                           placeholder="Input nama barang .."/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="unitItem">Unit Satuan <span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <select data-parsley-required="true" data-parsley-required-message="Wajib pilih salah satu" class="js-select2 form-control" id="unitItem" name="unitItem" style="width: 100%;" data-placeholder="Pilih salah satu..">
+                                            <option></option>
+                                            <option th:each="u : ${unit}"
+                                                    th:value="${u.unitId}"
+                                                    th:text="${u.unitName}">
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="categoryItem">Kategori Barang <span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <select data-parsley-required="true" data-parsley-required-message="Wajib pilih salah satu" class="js-select2 form-control" id="categoryItem" name="categoryItem" style="width: 100%;" data-placeholder="Pilih salah satu..">
+                                            <option></option>
+                                            <option th:each="cat : ${category}"
+                                                    th:value="${cat.categoryId}"
+                                                    th:text="${cat.categoryName}">
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-auto">
+                                <h2 class="content-heading text-black">Ketentuan pembuatan item baru</h2>
+                                <div class="form-group row">
+                                    <div class="col-lg-8">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-alt-success"><i class="fa fa-check"></i>Buat baru!</button>
+                        <button type="button" class="btn btn-alt-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- END Modal -->
+
+<div th:replace="layout :: body-bottom-scripts"/>
+<script th:src="@{/assets/js/plugins/select2/select2.full.min.js}"></script>
+<script th:src="@{/assets/js/plugins/parsley/dist/parsley.min.js}"></script>
+<script th:src="@{/assets/js/plugins/parsley/dist/i18n/id.js}"></script>
+
+<script th:src="@{/assets/js/plugins/select2/select2.full.min.js}"></script>
+<script th:src="@{/assets/js/plugins/bootstrap-wizard/jquery.bootstrap.wizard.js}"></script>
+<script th:src="@{/assets/js/plugins/jquery-validation/jquery.validate.min.js}"></script>
+<script th:src="@{/assets/js/plugins/jquery-validation/additional-methods.min.js}"></script>
+
+<script th:src="@{/assets/js/plugins/datatables/jquery.dataTables.min.js}"></script>
+<script th:src="@{/assets/js/plugins/datatables/dataTables.bootstrap4.min.js}"></script>
+
+<!-- Page JS Code -->
+<script th:src="@{/assets/js/pages/be_tables_datatables.js}"></script>
+
+<!-- Page JS Code -->
+<script>
+    jQuery(function () {
+        Codebase.helpers(['select2', 'tags-inputs']);
+    });
+</script>
+<script type="text/javascript">
+    var $jnoc = jQuery.noConflict();
+    $jnoc(document).ready(function () {
+        $jnoc("#validasi").parsley();
+        window.Parsley.on('field:error', function (fieldInstance) {
+            fieldInstance.$element.popover({
+                trigger: 'manual',
+                container: 'body',
+                placement: 'left',
+                content: function () {
+                    return fieldInstance.getErrorsMessages().join(';');
+                }
+            }).popover('show');
+            setTimeout(function() {
+                fieldInstance.$element.popover('hide')},3000);
+        });
+    });
+</script>
+</body>
+</html>

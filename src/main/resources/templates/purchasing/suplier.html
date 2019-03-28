@@ -1,0 +1,436 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="layout">
+<head th:replace="layout :: common-header">
+    <title>E-Customer Register</title>
+
+</head>
+<body>
+<div id="page-container" class="sidebar-o sidebar-inverse side-scroll page-header-glass page-header-inverse main-content-boxed side-trans-enabled">
+    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="fragments/control-sidebar"></div>
+    <div th:replace="fragments/sidebar"></div>
+
+    <main id="main-container" style="min-height: 630px;">
+        <div class="bg-image" th:style="'background-image: url(' + @{/assets/img/photos/photo26@2x.jpg} + ');'">
+            <div class="bg-black-op-75">
+                <div class="content content-top content-full text-center">
+                    <div class="py-20">
+                        <h1 class="h2 font-w700 text-white mb-10">Master Suplier</h1>
+                        <h2 class="h4 font-w400 text-white-op mb-0">Anda berada dimenu Master Suplier</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content">
+            <!-- Overview -->
+            <h2 class="content-heading">Overview</h2>
+            <div class="row gutters-tiny">
+                <!-- All Products -->
+                <div class="col-md-6 col-xl-3">
+                    <a class="block block-rounded block-link-shadow" href="javascript:void(0)">
+                        <div class="block-content block-content-full block-sticky-options">
+                            <div class="block-options">
+                                <div class="block-options-item">
+                                    <i class="fa fa-circle-o fa-2x text-info-light"></i>
+                                </div>
+                            </div>
+                            <div class="py-20 text-center">
+                                <div class="font-size-h2 font-w700 mb-0 text-info js-count-to-enabled" data-toggle="countTo" data-to="3580">3580</div>
+                                <div class="font-size-sm font-w600 text-uppercase text-muted">All Suplier</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <!-- END All Products -->
+
+                <!-- Top Sellers -->
+                <div class="col-md-6 col-xl-3">
+                    <a class="block block-rounded block-link-shadow" href="javascript:void(0)">
+                        <div class="block-content block-content-full block-sticky-options">
+                            <div class="block-options">
+                                <div class="block-options-item">
+                                    <i class="fa fa-star fa-2x text-warning-light"></i>
+                                </div>
+                            </div>
+                            <div class="py-20 text-center">
+                                <div class="font-size-h2 font-w700 mb-0 text-warning js-count-to-enabled" data-toggle="countTo" data-to="95">95</div>
+                                <div class="font-size-sm font-w600 text-uppercase text-muted">Top Suplier</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <!-- END Top Sellers -->
+
+                <!-- Out of Stock -->
+                <div class="col-md-6 col-xl-3">
+                    <a class="block block-rounded block-link-shadow" href="javascript:void(0)">
+                        <div class="block-content block-content-full block-sticky-options">
+                            <div class="block-options">
+                                <div class="block-options-item">
+                                    <i class="fa fa-warning fa-2x text-danger-light"></i>
+                                </div>
+                            </div>
+                            <div class="py-20 text-center">
+                                <div class="font-size-h2 font-w700 mb-0 text-danger js-count-to-enabled" data-toggle="countTo" data-to="30">30</div>
+                                <div class="font-size-sm font-w600 text-uppercase text-muted">Out of Stock</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <!-- END Out of Stock -->
+
+                <!-- Add Product -->
+                <div class="col-md-6 col-xl-3">
+                    <a class="block block-rounded block-link-shadow" data-toggle="modal" data-target="#modal-large">
+                        <div class="block-content block-content-full block-sticky-options">
+                            <div class="block-options">
+                                <div class="block-options-item">
+                                    <i class="fa fa-archive fa-2x text-success-light"></i>
+                                </div>
+                            </div>
+                            <div class="py-20 text-center">
+                                <div class="font-size-h2 font-w700 mb-0 text-success">
+                                    <i class="fa fa-plus"></i>
+                                </div>
+                                <div class="font-size-h4 font-w600 text-uppercase text-muted">Suplier Baru</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <!-- END Add Product -->
+            </div>
+            <!-- END Overview -->
+
+            <!-- Products -->
+            <div class="content-heading">
+                <div class="dropdown float-right">
+                    <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" id="ecom-products-filter-drop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        All
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="ecom-products-filter-drop">
+                        <a class="dropdown-item" href="javascript:void(0)">
+                            <i class="fa fa-fw fa-star text-warning mr-5"></i>Top Sellers
+                        </a>
+                        <a class="dropdown-item" href="javascript:void(0)">
+                            <i class="fa fa-fw fa-warning text-danger mr-5"></i>Out of Stock
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item active" href="javascript:void(0)">
+                            <i class="fa fa-fw fa-circle-o text-info mr-5"></i>All
+                        </a>
+                    </div>
+                </div>
+                <div class="dropdown float-right mr-5">
+                    <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" id="ecom-products-category-drop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Category
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="ecom-products-category-drop">
+                        <a class="dropdown-item" th:href="@{'/app/inv/warehouse'}">
+                            <i class="fa fa-fw fa-gamepad mr-5"></i>Semua
+                        </a>
+                        <a class="dropdown-item" th:href="@{'/app/inv/warehouse?by=Makanan'}">
+                            <i class="fa fa-fw fa-gamepad mr-5"></i>Makanan
+                        </a>
+                        <a class="dropdown-item" th:href="@{'/app/inv/warehouse?by=Minuman'}">
+                            <i class="fa fa-fw fa-desktop mr-5"></i>Minuman
+                        </a>
+                        <a class="dropdown-item" th:href="@{'/app/inv/warehouse?by=Makanan Ringan'}">
+                            <i class="fa fa-fw fa-mobile-phone mr-5"></i>Makanan Ringan
+                        </a>
+                        <a class="dropdown-item" th:href="@{'/app/inv/warehouse?by=Obat-obatan'}">
+                            <i class="fa fa-fw fa-heartbeat mr-5"></i>Obat-obatan
+                        </a>
+                        <a class="dropdown-item" th:href="@{'/app/inv/warehouse?by=Sanitasi'}">
+                            <i class="fa fa-fw fa-heartbeat mr-5"></i>Sanitasi
+                        </a>
+                    </div>
+                </div>
+                Daftar Inventory Barang
+            </div>
+            <div class="block block-rounded">
+                <div class="block-content">
+                    <!-- Products Table -->
+                    <table class="table table-borderless table-striped js-dataTable-full-pagination">
+                        <thead>
+                        <tr>
+                            <th style="display: none"></th>
+                            <th style="width: 100px;">Nama Suplier</th>
+                            <th style="width: 100px;">Nama Kontak</th>
+                            <th class="d-none d-sm-table-cell">Alamat</th>
+                            <th class="text-center">No Telepon</th>
+                            <th class="d-none d-md-table-cell text-right">Lokasi</th>
+                            <th class="text-center">Aksi</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="suplier : ${suplierList}">
+                            <th style="display: none" th:text="${suplier.suplierId}"></th>
+                            <td class="d-none d-sm-table-cell" th:text="${suplier.suplierName}"></td>
+                            <td class="d-none d-sm-table-cell" th:text="${suplier.suplierPic}"></td>
+                            <td class="d-none d-sm-table-cell" th:text="${suplier.address}"></td>
+                            <td class="text-center" th:text="${suplier.suplierPhone}"></td>
+                            <td class="d-none d-md-table-cell text-right" th:text="${suplier.masterLocation.locationName}"></td>
+                            <td style="text-align:center;">
+                                <a class="btnmodal" data-toggle="modal" data-target="#myModal" contenteditable="false"><i class="fa fa-edit"></i></a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-popin">
+                            <div class="modal-content">
+                                <div class="block-header bg-primary-dark">
+                                    <h3 class="block-title text-body-bg-light">Ubah Data Suplier</h3>
+                                    <div class="block-options">
+                                        <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                                            <i class="si si-close"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <form name="modalForm" th:autocomplete="off" class="validasi" data-parsley-validate="true" data-parsley-errors-messages-disabled="true" action="/app/purchasing/suplier/update" method="post">
+                                    <div class="modal-body">
+                                        <div class="form-horizontal">
+                                            <div class="form-group" >
+                                                <label class="control-label col-md-3">ID Suplier</label>
+                                                <div class="col-md-6">
+                                                    <input type="text" th:readonly="true" id="suplierIds" name="suplierId" class="form-control appointmentIdEdit" />
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="form-group row">
+                                                                <div class="col-12">
+                                                                    <label for="suplierNames">Nama Suplier</label>
+                                                                    <input data-parsley-required="true" data-parsley-required-message="Wajib diisi" type="text" class="form-control" id="suplierNames" name="suplierName"
+                                                                           placeholder="Input nama suplier .."/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="form-group row">
+                                                                <div class="col-8">
+                                                                    <label for="suplierPics">Nama Kontak</label>
+                                                                    <input data-parsley-required="true" data-parsley-required-message="Wajib diisi" type="text" class="form-control" id="suplierPics" name="suplierPic"
+                                                                           placeholder="Nama kontak suplier .."/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="form-group row">
+                                                                <div class="col-8">
+                                                                    <label for="suplierPhones">Nomor Telepon</label>
+                                                                    <div class="input-group-prepend">
+                                                                        <input data-parsley-required="true" data-parsley-required-message="Wajib diisi" type="text" class="form-control" id="suplierPhones" name="suplierPhone"
+                                                                               placeholder="Nomor telepon suplier.."/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-lg-4 col-form-label" for="masterLocations">Lokasi Suplier <span class="text-danger">*</span></label>
+                                                        <div class="col-lg-8">
+                                                            <select data-parsley-required="true" data-parsley-required-message="Wajib pilih salah satu" class="js-select2 form-control" id="masterLocations" name="masterLocation" style="width: 100%;" data-placeholder="Pilih salah satu..">
+                                                                <option></option>
+                                                                <option th:each="l : ${locationList}"
+                                                                        th:value="${l.locationId}"
+                                                                        th:text="${l.locationName}">
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="form-group row">
+                                                                <div class="col-12">
+                                                                    <label for="addresss">Alamat</label>
+                                                                    <div class="input-group-prepend">
+                                                                        <textarea data-parsley-required="true" data-parsley-required-message="Wajib diisi" type="text" class="form-control" id="addresss" name="address" placeholder="Alamat suplier.."></textarea>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Keluar</button>
+                                        <button type="submit" class="btn btn-primary">Simpan</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END Products -->
+        </div>
+    </main>
+</div>
+
+<div th:replace="layout :: page-footer"/>
+
+<!-- Modal -->
+<div class="modal fade" id="modal-large" role="dialog" aria-labelledby="modal-large" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-popin" role="document">
+        <div class="modal-content">
+            <div class="block-content">
+                <form th:autocomplete="off" class="validasi" data-parsley-validate="true" data-parsley-errors-messages-disabled="true" action="/app/purchasing/suplier/create" method="post">
+                    <div class="block block-themed block-transparent mb-0">
+                        <div class="block-header bg-primary-dark">
+                            <h3 class="block-title">Suplier Baru</h3>
+                            <div class="block-options">
+                                <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                                    <i class="si si-close"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <h2 class="content-heading text-black">Suplier Detail</h2>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group row">
+                                            <div class="col-12">
+                                                <label for="suplierName">Nama Suplier</label>
+                                                <input data-parsley-required="true" data-parsley-required-message="Wajib diisi" type="text" class="form-control" id="suplierName" name="suplierName"
+                                                       placeholder="Input nama suplier .."/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group row">
+                                            <div class="col-8">
+                                                <label for="suplierPic">Nama Kontak</label>
+                                                <input data-parsley-required="true" data-parsley-required-message="Wajib diisi" type="text" class="form-control" id="suplierPic" name="suplierPic"
+                                                       placeholder="Nama kontak suplier .."/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group row">
+                                            <div class="col-8">
+                                                <label for="suplierPhone">Nomor Telepon</label>
+                                                <div class="input-group-prepend">
+                                                    <input data-parsley-required="true" data-parsley-required-message="Wajib diisi" type="text" class="form-control" id="suplierPhone" name="suplierPhone"
+                                                          placeholder="Nomor telepon suplier.."/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="masterLocation">Lokasi Suplier <span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <select data-parsley-required="true" data-parsley-required-message="Wajib pilih salah satu" class="js-select2 form-control" id="masterLocation" name="masterLocation" style="width: 100%;" data-placeholder="Pilih salah satu..">
+                                            <option></option>
+                                            <option th:each="l : ${locationList}"
+                                                    th:value="${l.locationId}"
+                                                    th:text="${l.locationName}">
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="suplierType">Tipe Suplier <span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <select data-parsley-required="true" data-parsley-required-message="Wajib pilih salah satu" class="js-select2 form-control" id="suplierType" name="suplierType" style="width: 100%;" data-placeholder="Pilih salah satu..">
+                                            <option></option>
+                                            <option th:each="tl : ${typeList}"
+                                                    th:value="${tl.id}"
+                                                    th:text="${tl.type}">
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group row">
+                                            <div class="col-12">
+                                                <label for="address">Alamat</label>
+                                                    <div class="input-group-prepend">
+                                                        <textarea data-parsley-required="true" data-parsley-required-message="Wajib diisi" type="text" class="form-control" id="address" name="address" placeholder="Alamat suplier.."></textarea>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-alt-success"><i class="fa fa-check"></i>Buat baru!</button>
+                        <button type="button" class="btn btn-alt-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- END Modal -->
+
+<div th:replace="layout :: body-bottom-scripts"/>
+<script th:src="@{/assets/js/plugins/select2/select2.full.min.js}"></script>
+<script th:src="@{/assets/js/plugins/parsley/dist/parsley.min.js}"></script>
+<script th:src="@{/assets/js/plugins/parsley/dist/i18n/id.js}"></script>
+
+<script th:src="@{/assets/js/plugins/select2/select2.full.min.js}"></script>
+<script th:src="@{/assets/js/plugins/bootstrap-wizard/jquery.bootstrap.wizard.js}"></script>
+<script th:src="@{/assets/js/plugins/jquery-validation/jquery.validate.min.js}"></script>
+<script th:src="@{/assets/js/plugins/jquery-validation/additional-methods.min.js}"></script>
+
+<script th:src="@{/assets/js/plugins/datatables/jquery.dataTables.min.js}"></script>
+<script th:src="@{/assets/js/plugins/datatables/dataTables.bootstrap4.min.js}"></script>
+
+<!-- Page JS Code -->
+<script th:src="@{/assets/js/pages/be_tables_datatables.js}"></script>
+
+<!-- Page JS Code -->
+<script>
+    jQuery(function () {
+        Codebase.helpers(['select2', 'tags-inputs']);
+    });
+</script>
+<script>
+    $(".btnmodal[data-target='#myModal']").click(function() {
+        var columnHeadings = $("thead th").map(function() {
+            return $(this).text();
+        }).get();
+        columnHeadings.pop();
+        var columnValues = $(this).parent().siblings().map(function() {
+            return $(this).text();
+        }).get();
+
+        var myModal = $('#myModal');
+        $('#suplierIds', myModal).val(columnValues[0].trim());
+        $('#suplierNames', myModal).val(columnValues[1].trim());
+        $('#suplierPics', myModal).val(columnValues[2].trim());
+        $('#addresss', myModal).val(columnValues[3].trim());
+        $('#suplierPhones', myModal).val(columnValues[4].trim());
+        $('#masterLocations', myModal).val(columnValues[5].trim());
+
+        myModal.modal({ show: true });
+        return false;
+    });
+</script>
+</body>
+</html>

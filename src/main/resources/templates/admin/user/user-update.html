@@ -1,0 +1,177 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="layout">
+<head th:replace="layout :: common-header">
+    <title>Update Hak Akses</title>
+
+</head>
+<body>
+<div id="page-container" class="sidebar-o sidebar-inverse side-scroll page-header-inverse main-content-boxed side-trans-enabled page-header-fixed">
+    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="fragments/control-sidebar"></div>
+    <div th:replace="fragments/sidebar"></div>
+
+    <!-- Main Container -->
+    <main id="main-container">
+        <!-- Page Content -->
+        <div class="content">
+            <div class="block">
+                <div class="block-header block-header-default">
+                    <h3 class="block-title">Halaman Penggantian Lokasi Kerja &amp; Hak Akses</h3>
+                    <div class="block-options">
+                        <button type="button" class="btn-block-option">
+                            <i class="si si-wrench"></i>
+                        </button>
+                    </div>
+                </div>
+                <img th:attr="src=@{${user.image}}" width="100"/>
+                <div class="block-content">
+                    <div class="block">
+                        <!-- jQuery Validation (.js-validation-bootstrap class is initialized in js/pages/be_forms_validation.js) -->
+                        <!-- For more examples you can check out https://github.com/jzaefferer/jquery-validation -->
+                        <form id="validasi" class="js-validation-bootstrap" data-parsley-validate="true" th:object="${user}" th:action="@{/app/user/update}" method="post"
+                              autocomplete="off">
+                            <input type="hidden" name="userId" th:value="${user.userId}"/>
+                            <div class="row">
+                                <div class="col-md-7">
+                                    <div class="form-group row">
+                                        <div class="col-6">
+                                            <label for="firstName">Nama Depan : </label>
+                                            <input type="hidden" class="form-control" id="firstName" name="firstName"
+                                                   th:text="${user.firstName}" placeholder="Input nama depan anda.."/>
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="lastname">Nama Belakang :</label>
+                                            <input type="hidden" class="form-control" id="lastname" name="lastName"
+                                                   th:text="${user.lastName}" placeholder="Input nama belakang anda.."/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-2" for="val-username">Username : </label>
+                                <div class="col-lg-4">
+                                    <input type="text" class="form-control" id="val-username" name="username"
+                                           th:readonly="true" th:value="${user.username}"
+                                           placeholder="Input username.."/>
+
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-2 col-form-label" for="val-email">Email : </label>
+                                <div class="col-lg-4">
+                                    <input type="hidden" class="form-control" id="val-email" name="email"
+                                           th:text="${user.email}" placeholder="Input email anda.."/>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label" for="val-nik">Nomor Induk Karyawan : </label>
+                                <div class="col-lg-6">
+                                    <input type="hidden" class="form-control" autocomplete="off" id="val-nik" name="nik"
+                                            placeholder="000/EM/000"/>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label" for="masterLocation">Lokasi kerja <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-lg-8">
+                                    <select th:required="required" data-parsley-errors-messages-disabled="true"
+                                            data-parsley-required-message="Anda perlu mengisi lokasi kerja baru!"
+                                            class="js-select2 form-control" id="masterLocation"  name="masterLocation"
+                                            data-placeholder="Pilih lokasi kerja" th:field="*{masterLocation}">
+                                        <!-- Required for data-placeholder attribute to work with Select2 plugin -->
+                                        <!--<option th:value="${user.masterLocation.locationId}" th:text="${user.masterLocation.locationName}"-->
+                                                <!--th:selected="true"></option>-->
+                                        <option th:each="location : ${allLocation}"
+                                                th:value="${location.locationId}"
+                                                th:text="${location.locationName}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label" for="userRoles">Hak Akses <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-lg-8">
+                                    <select th:required="required" data-parsley-errors-messages-disabled="true"
+                                            data-parsley-required-message="Anda perlu mengisi hak akses baru!"
+                                            class="js-select2 form-control" id="userRoles"
+                                            name="roles" th:field="*{roles}"
+                                            data-placeholder="Hak Akses" th:multiple="multiple">
+                                        <option th:each="role : ${allRole}"
+                                                th:field="*{roles}"
+                                                th:value="${role.roleId}"
+                                                th:text="${role.type}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label">Status User<span
+                                        class="text-danger">*</span></label>
+                                <div class="col-lg-8">
+                                    <input type="checkbox" th:checked="${user.enabled}" name="enabled"/>
+                                    <i class="fa fa-user-circle mr-5"></i>User Aktif
+                                </div>
+                            </div>
+
+                            <!--<input type="hidden" th:name="${_csrf.parameterName}"   th:value="${_csrf.token}" />-->
+                            <div class="form-group col row">
+                                <div class="md-10">
+                                    <button type="submit" class="btn btn-alt-primary mr-5 mb-5">
+                                        <i class="fa fa-check mr-5"></i> Update
+                                    </button>
+                                </div>
+                                <div class="md-10">
+                                    <a onclick="goBack()" class="btn btn-alt-secondary mr-5 mb-5">
+                                        <i class="fa fa-close mr-5"></i> Batal
+                                    </a>
+                                    <script>
+                                        function goBack() {
+                                            window.history.back();
+                                        }
+                                    </script>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- END Main Container -->
+</div>
+<div th:replace="layout :: page-footer"/>
+<div th:replace="layout :: body-bottom-scripts"/>
+<script th:src="@{/assets/js/plugins/parsley/dist/parsley.min.js}"></script>
+<script th:src="@{/assets/js/plugins/parsley/dist/i18n/id.js}"></script>
+<script th:src="@{/assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}"></script>
+
+<script th:src="@{/assets/js/plugins/select2/select2.full.min.js}"></script>
+<!-- Page JS Code -->
+<script>
+    jQuery(function () {
+        // Init page helpers (BS Datepicker + BS Colorpicker + BS Maxlength + Select2 + Masked Input + Range Sliders + Tags Inputs plugins)
+        Codebase.helpers(['select2', 'tags-inputs']);
+    });
+</script>
+'
+<script type="text/javascript">
+    var $jnoc = jQuery.noConflict();
+    $jnoc(document).ready(function () {
+        $jnoc("#validasi").parsley();
+        window.Parsley.on('field:error', function (fieldInstance) {
+            fieldInstance.$element.popover({
+                trigger: 'manual',
+                container: 'body',
+                placement: 'left',
+                content: function () {
+                    return fieldInstance.getErrorsMessages().join(';');
+                }
+            }).popover('show');
+        });
+    });
+</script>
+
+</body>
+</html>

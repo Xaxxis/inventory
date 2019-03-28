@@ -1,0 +1,59 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:fragment="common-header">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+
+    <title>Xa - Inventory Application</title>
+
+    <link rel="shortcut icon" th:href="@{/assets/img/favicons/favicon.png}"/>
+    <link rel="icon" type="image/png" sizes="192x192" th:href="@{/assets/img/favicons/favicon-192x192.png}"/>
+    <link rel="apple-touch-icon" sizes="180x180" th:href="@{/assets/img/favicons/apple-touch-icon-180x180.png}"/>
+
+    <link rel="stylesheet" th:href="@{/assets/js/plugins/select2/select2.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/js/plugins/select2/select2-bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/js/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/js/plugins/parsley/dist/error.css}">
+    <link rel="stylesheet" th:href="@{/assets/js/plugins/datatables/dataTables.checkboxes.css}">
+
+    <link rel="stylesheet" id="css-main" th:href="@{/assets/css/codebase.min.css}"/>
+     <link rel="stylesheet" id="css-theme" th:href="@{/assets/css/themes/pulse.min.css}">
+</head>
+<body>
+    <div id="page-container" class="sidebar-o side-scroll page-header-fixed page-header-glass main-content-boxed side-trans-enabled sidebar-inverse">
+        <div th:replace="fragments/header"></div>
+        <div id="page-loader"></div>
+
+        <div th:replace="fragments/sidebar"></div>
+
+        <aside id="side-overlay">
+            <div th:replace="fragments/control-sidebar"></div>
+        </aside>
+
+        <div th:fragment="page-footer">
+            <footer id="page-footer" class="opacity-0">
+                <div class="content py-20 font-size-xs clearfix">
+                    <div class="float-right">
+                        Crafted with <i class="fa fa-heart text-pulse"></i> by <a class="font-w600" href="https://instagram.com/xaxxiss" target="_blank">Xaxxis</a>
+                    </div>
+                    <div class="float-left">
+                        <a class="font-w600" href="https://instagram.com/xaxxiss" target="_blank">XaApp</a> &copy; <span class="js-year-copy">2018</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+</body>
+
+<div th:fragment="body-bottom-scripts">
+    <script th:src="@{/assets/js/core/jquery.min.js}"></script>
+    <script th:src="@{/assets/js/core/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/assets/js/core/jquery.slimscroll.min.js}"></script>
+    <script th:src="@{/assets/js/core/jquery.scrollLock.min.js}"></script>
+    <script th:src="@{/assets/js/core/jquery.appear.min.js}"></script>
+    <script th:src="@{/assets/js/core/jquery.countTo.min.js}"></script>
+    <script th:src="@{/assets/js/core/js.cookie.min.js}"></script>
+    <script th:src="@{/assets/js/codebase.js}"></script>
+</div>
+</html>
