@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 
 @Entity
@@ -35,12 +37,15 @@ public class Inventory {
     private Suplier suplier;
 
     @Column(name = "cost_price", length = 8)
+    @DecimalMin(value = "0.00", message = "*Nominal harga beli tidak boleh negatif")
     private BigDecimal costPrice;
 
     @Column(name = "sell_price", length = 8)
+    @DecimalMin(value = "0.00", message = "*Nominal harga jual tidak boleh negatif")
     private BigDecimal sellPrice;
 
     @Column(name = "on_stock", length = 5, nullable = false)
+    @Min(value = 0, message = "*Stok tidak boleh angka negatif")
     private Integer stock;
 
     @Column(name = "is_active", nullable = false)

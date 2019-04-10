@@ -8,8 +8,11 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 @SpringBootApplication
 public class InventoryApplication extends SpringBootServletInitializer {
 
+
+
     public static void main(String[] args) {
         SpringApplication.run(InventoryApplication.class, args);
+
     }
 
     @Override

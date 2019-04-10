@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MasterItemServiceImpl implements MasterItemService {
@@ -31,7 +32,7 @@ public class MasterItemServiceImpl implements MasterItemService {
     }
 
     @Override
-    public MasterItem findByItemId(String itemId) {
+    public Optional<MasterItem> findByItemId(String itemId) {
         return masterItemDao.findByItemId(itemId);
     }
 

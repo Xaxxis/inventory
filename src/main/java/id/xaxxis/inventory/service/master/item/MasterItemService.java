@@ -5,10 +5,11 @@ import id.xaxxis.inventory.entity.master.item.MasterItem;
 import id.xaxxis.inventory.entity.master.item.UnitItem;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MasterItemService {
     MasterItem findByItemBarcode(String itemBarcode);
-    MasterItem findByItemId(String itemId);
+    Optional<MasterItem> findByItemId(String itemId);
     List<MasterItem> findAll();
     List<MasterItem> findAllByItemCategory(String categoryName);
     MasterItem saveItem(MasterItem masterItem);

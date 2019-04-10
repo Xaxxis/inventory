@@ -1,17 +1,14 @@
 package id.xaxxis.inventory.entity.master.item;
 
-import id.xaxxis.inventory.entity.inventory.Inventory;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.Objects;
 
 @Entity
 @Data
 @Table(name = "master_item")
-@EqualsAndHashCode
 public class MasterItem {
 
     @Id
@@ -34,20 +31,32 @@ public class MasterItem {
     @JoinColumn(name = "unit_id", nullable = false)
     private UnitItem unitItem;
 
-    @OneToMany(
-            mappedBy = "masterItem",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
-    private Set<Inventory> inventories;
+//    @OneToMany(
+//            mappedBy = "masterItem",
+//            cascade = CascadeType.ALL,
+//            orphanRemoval = true)
+//    private Set<Inventory> inventories;
 
     public MasterItem() {
     }
 
-    public MasterItem(String itemBarcode, String itemName, CategoryItem categoryItem, UnitItem unitItem, Set<Inventory> inventories) {
+    public MasterItem(String itemBarcode, String itemName, CategoryItem categoryItem, UnitItem unitItem) {
         this.itemBarcode = itemBarcode;
         this.itemName = itemName;
         this.categoryItem = categoryItem;
         this.unitItem = unitItem;
-        this.inventories = inventories;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MasterItem that = (MasterItem) o;
+        return itemId.equals(that.itemId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(itemId);
     }
 }

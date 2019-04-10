@@ -1,15 +1,23 @@
 package id.xaxxis.inventory.controller.purchasing;
 
+import id.xaxxis.inventory.dao.purchasing.PurchaseRequestDao;
+import id.xaxxis.inventory.entity.master.item.MasterItem;
 import id.xaxxis.inventory.entity.master.suplier.Suplier;
+import id.xaxxis.inventory.entity.purchasing.PurchaseRequest;
+import id.xaxxis.inventory.entity.purchasing.PurchaseRequestItem;
 import id.xaxxis.inventory.service.master.item.MasterItemService;
 import id.xaxxis.inventory.service.master.location.MasterLocationService;
 import id.xaxxis.inventory.service.master.suplier.SuplierService;
+import id.xaxxis.inventory.service.purchasing.pr.PurchaseRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/app/purchasing")
@@ -18,14 +26,19 @@ public class PurchaseController {
     private final SuplierService suplierService;
     private final MasterLocationService masterLocationService;
     private final MasterItemService masterItemService;
-
+    private final PurchaseRequestService purchaseRequestService;
+    private final PurchaseRequestDao purchaseRequestDao;
     @Autowired
     public PurchaseController(SuplierService suplierService,
                               MasterLocationService masterLocationService,
-                              MasterItemService masterItemService) {
+                              MasterItemService masterItemService,
+                              PurchaseRequestService purchaseRequestService,
+                              PurchaseRequestDao purchaseRequestDao) {
         this.suplierService = suplierService;
         this.masterLocationService = masterLocationService;
         this.masterItemService = masterItemService;
+        this.purchaseRequestService = purchaseRequestService;
+        this.purchaseRequestDao = purchaseRequestDao;
     }
 
     @RequestMapping(value = "/suplier", method = RequestMethod.GET)
@@ -60,11 +73,50 @@ public class PurchaseController {
     }
 
     @RequestMapping(value = "/request", method = RequestMethod.GET)
-    public String purchaseRequest(Model model) {
-        model.addAttribute("purchaseOpen", "open");
-        model.addAttribute("requestActive", "active");
-        model.addAttribute("itemList", masterItemService.findAll());
-        return "purchasing/purchase-request";
+    public ModelAndView purchaseRequest() {
+        ModelAndView mv = new ModelAndView("purchasing/purchase-request");
+        mv.addObject("purchaseOpen", "open");
+        mv.addObject("requestActive", "active");
+        mv.addObject("itemList", masterItemService.findAll());
+        mv.addObject("itemCart", purchaseRequestService.getItemInCart());
+        return mv;
     }
 
+    @RequestMapping(value = "/addAll", method = RequestMethod.POST)
+    public ModelAndView invoices(@RequestParam List<MasterItem> itemIds) {
+
+        return purchaseRequest();
+    }
+
+    @GetMapping(value = "/request/addItem/{itemId}")
+    public ModelAndView addItem(@PathVariable("itemId") String itemId,
+                                Optional<MasterItem> masterItem) {
+        masterItemService.findByItemId(itemId).ifPresent(purchaseRequestService::addItem);
+        return purchaseRequest();
+    }
+
+    @RequestMapping(value = "/request/updateItem/{itemId}", method = RequestMethod.GET)
+    public ModelAndView updateItem(@PathVariable("itemId") String itemId,
+                                   HttpSession session){
+        int quantity = 6;
+        MasterItem masterItem = masterItemService.findByItemBarcode(itemId);
+        purchaseRequestService.updateItem(masterItem,quantity);
+
+
+        return purchaseRequest();
+    }
+
+    @GetMapping(value = "/request/removeItem/{itemId}")
+    public ModelAndView removeItem(@PathVariable("itemId") String itemId) {
+        masterItemService.findByItemId(itemId).ifPresent(purchaseRequestService::removeItem);
+        return purchaseRequest();
+    }
+
+    @RequestMapping(value = "/request/submit", method = RequestMethod.POST)
+    public String createPr(PurchaseRequest purchaseRequest, PurchaseRequestItem purchaseRequestItem, Model model) {
+        model.addAttribute("purchaseRequest", purchaseRequest);
+        model.addAttribute("purchaseRequestItem", purchaseRequestItem);
+        purchaseRequestService.createPurchaseRequest(purchaseRequest, purchaseRequestItem);
+        return "redirect:/app/purchasing/request";
+    }
 }
