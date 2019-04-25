@@ -1,5 +1,8 @@
-package id.xaxxis.inventory.entity.purchasing;
+package id.xaxxis.inventory.entity.purchasing.pr;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import id.xaxxis.inventory.entity.BaseEntity;
 import id.xaxxis.inventory.entity.master.item.MasterItem;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
@@ -10,7 +13,7 @@ import javax.validation.constraints.Digits;
 @Entity
 @Table(name = "purchase_request_item")
 @Data
-public class PurchaseRequestItem {
+public class PurchaseRequestItem extends BaseEntity {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -22,7 +25,9 @@ public class PurchaseRequestItem {
     @JoinColumn(name = "req_id")
     private PurchaseRequest purchaseRequest;
 
-    @ManyToOne
+    @JsonManagedReference
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id", nullable = false)
     private MasterItem masterItems;
 

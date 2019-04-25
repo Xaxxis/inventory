@@ -1,10 +1,12 @@
 package id.xaxxis.inventory.controller.purchasing;
 
 import id.xaxxis.inventory.dao.purchasing.PurchaseRequestDao;
+import id.xaxxis.inventory.dto.purchasing.PurchaseRequestCart;
 import id.xaxxis.inventory.entity.master.item.MasterItem;
 import id.xaxxis.inventory.entity.master.suplier.Suplier;
-import id.xaxxis.inventory.entity.purchasing.PurchaseRequest;
-import id.xaxxis.inventory.entity.purchasing.PurchaseRequestItem;
+import id.xaxxis.inventory.entity.purchasing.pr.PurchaseRequest;
+import id.xaxxis.inventory.entity.purchasing.pr.PurchaseRequestItem;
+import id.xaxxis.inventory.enums.RequestStatus;
 import id.xaxxis.inventory.service.master.item.MasterItemService;
 import id.xaxxis.inventory.service.master.location.MasterLocationService;
 import id.xaxxis.inventory.service.master.suplier.SuplierService;
@@ -15,9 +17,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("/app/purchasing")
@@ -82,41 +85,86 @@ public class PurchaseController {
         return mv;
     }
 
-    @RequestMapping(value = "/addAll", method = RequestMethod.POST)
-    public ModelAndView invoices(@RequestParam List<MasterItem> itemIds) {
-
-        return purchaseRequest();
+    @RequestMapping(value = "/request/list", method = RequestMethod.GET)
+    public String prList(Model model) {
+        model.addAttribute("locations", masterLocationService.findAll());
+        model.addAttribute("status", RequestStatus.values());
+        model.addAttribute("tertunda", purchaseRequestService.countByStatus(RequestStatus.TERTUNDA));
+        model.addAttribute("selesai", purchaseRequestService.countByStatus(RequestStatus.SELESAI));
+        model.addAttribute("proses", purchaseRequestService.countByStatus(RequestStatus.DIPROSES));
+        model.addAttribute("batal", purchaseRequestService.countByStatus(RequestStatus.DIBATALKAN));
+        model.addAttribute("revisi", purchaseRequestService.countByStatus(RequestStatus.REVISI));
+        return "purchasing/request-list";
     }
 
-    @GetMapping(value = "/request/addItem/{itemId}")
-    public ModelAndView addItem(@PathVariable("itemId") String itemId,
-                                Optional<MasterItem> masterItem) {
-        masterItemService.findByItemId(itemId).ifPresent(purchaseRequestService::addItem);
-        return purchaseRequest();
+    @RequestMapping(value = "/request/getPR", method = RequestMethod.GET)
+    public String getPR(@ModelAttribute("number") String prNumber, Model model) {
+        PurchaseRequest purchaseRequest = purchaseRequestService.findByPrNumber(prNumber);
+        List<PurchaseRequestItem> purchaseRequestItemList = purchaseRequestService.findAllItemReq(purchaseRequest.getPurchaseReqId());
+        model.addAttribute("pr", purchaseRequest);
+        model.addAttribute("itemList", purchaseRequestItemList);
+        return "purchasing/request-detail";
     }
 
-    @RequestMapping(value = "/request/updateItem/{itemId}", method = RequestMethod.GET)
-    public ModelAndView updateItem(@PathVariable("itemId") String itemId,
-                                   HttpSession session){
-        int quantity = 6;
-        MasterItem masterItem = masterItemService.findByItemBarcode(itemId);
-        purchaseRequestService.updateItem(masterItem,quantity);
-
-
-        return purchaseRequest();
+    @GetMapping(value = "/request/addItem/")
+    public String addItem(@RequestParam("itemId") List<String> itemId,
+                                @RequestParam("quantity") List<Integer> quantity,
+                                @RequestParam("itemRemarks") List<String> itemRemarks) {
+        for(int i=0; i < itemId.size(); i++) {
+            Optional<MasterItem> masterItem = masterItemService.findByItemId(Stream.of(itemId.get(i)).collect(Collectors.joining()));
+            PurchaseRequestCart purchaseCart = new PurchaseRequestCart();
+            purchaseCart.setMasterItem(masterItem.get());
+            purchaseCart.setQuantity(quantity.get(i));
+            purchaseCart.setItemRemarks(Stream.of(itemRemarks.get(i)).collect(Collectors.joining()));
+            purchaseRequestService.addItem(purchaseCart, itemId.get(i));
+        }
+        return "redirect:/app/purchasing/request";
     }
+
+//    @GetMapping(value = "/request/updateItem/")
+//    public ModelAndView updateItem(@ModelAttribute ItemReqForm itemReqForm, Model model) {
+//        List<PurchaseRequestCart> purchaseRequestCarts = itemReqForm.getPurchaseRequestCartList();
+//        model.addAttribute("prc", purchaseRequestCarts);
+//        for(PurchaseRequestCart prc:purchaseRequestCarts) {
+//            Optional<MasterItem> masterItem = masterItemService.findByItemId(prc.getMasterItem().getItemId());
+//            prc.setMasterItem(masterItem.get());
+//            purchaseRequestService.addItem(prc, prc.getQuantity());
+//        }
+//        return purchaseRequest();
+//    }
 
     @GetMapping(value = "/request/removeItem/{itemId}")
     public ModelAndView removeItem(@PathVariable("itemId") String itemId) {
-        masterItemService.findByItemId(itemId).ifPresent(purchaseRequestService::removeItem);
+        purchaseRequestService.removeItem(itemId);
         return purchaseRequest();
     }
 
     @RequestMapping(value = "/request/submit", method = RequestMethod.POST)
-    public String createPr(PurchaseRequest purchaseRequest, PurchaseRequestItem purchaseRequestItem, Model model) {
+    public String createPr(PurchaseRequest purchaseRequest, PurchaseRequestItem purchaseRequestItem, Model model,
+                           @RequestParam("itemId") List<String> itemId,
+                           @RequestParam("quantity") List<Integer> quantity,
+                           @RequestParam("itemRemarks") List<String> itemRemarks) {
+        for(int i=0; i < itemId.size(); i++) {
+            Optional<MasterItem> masterItem = masterItemService.findByItemId(Stream.of(itemId.get(i)).collect(Collectors.joining()));
+            PurchaseRequestCart purchaseCart = new PurchaseRequestCart();
+            purchaseCart.setMasterItem(masterItem.get());
+            purchaseCart.setQuantity(quantity.get(i));
+            purchaseCart.setItemRemarks(Stream.of(itemRemarks.get(i)).collect(Collectors.joining()));
+            purchaseRequestService.updateItem(purchaseCart, itemId.get(i));
+        }
         model.addAttribute("purchaseRequest", purchaseRequest);
-        model.addAttribute("purchaseRequestItem", purchaseRequestItem);
         purchaseRequestService.createPurchaseRequest(purchaseRequest, purchaseRequestItem);
         return "redirect:/app/purchasing/request";
+    }
+
+    @RequestMapping(value = "/so/revPR", method = RequestMethod.GET)
+    public String revisionPR(@RequestParam("getPR") String prId, Model model){
+        PurchaseRequest purchaseRequest = purchaseRequestService.findByPrId(prId);
+        List<PurchaseRequestItem> purchaseRequestItemList = purchaseRequest.getRequestItemList();
+
+
+        model.addAttribute("pr", purchaseRequest);
+        model.addAttribute("itemList", purchaseRequestItemList);
+        return "purchasing/pr-revision";
     }
 }

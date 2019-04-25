@@ -1,6 +1,6 @@
 package id.xaxxis.inventory.dao.purchasing;
 
-import id.xaxxis.inventory.entity.purchasing.PurchaseRequestItem;
+import id.xaxxis.inventory.entity.purchasing.pr.PurchaseRequestItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -5,6 +5,11 @@
     <title>E-Customer Register</title>
 </head>
 <body>
+<style>
+    .modal-lg {
+        max-width: 80%;
+    }
+</style>
 <div id="page-container" class="sidebar-o sidebar-inverse side-scroll page-header-glass page-header-inverse main-content-boxed side-trans-enabled">
     <div th:replace="fragments/header :: header"></div>
     <div th:replace="fragments/control-sidebar"></div>
@@ -21,7 +26,7 @@
                 </div>
             </div>
         </div>
-        <form class="validasi" action="/app/purchasing/request/submit" th:autocomplete="off" method="post">
+        <form class="validasi" action="/app/purchasing/request/submit" th:autocomplete="off" th:object="${itemReqForm}" method="post" data-parsley-validate="true" data-parsley-errors-messages-disabled="true">
         <div class="content">
             <div class="input_fields_wrap">
                 <div class="block">
@@ -55,7 +60,7 @@
                                             <div class="col-lg-12">
                                                 <label for="remarks">Untuk Penggunaan :</label>
                                                 <div class="input-group">
-                                                    <textarea data-parsley-required="true" data-parsley-required-message="Wajib diisi" th:maxlength="200" class="form-control" id="remarks" name="remarks" rows="2" placeholder="Alasan.."></textarea>
+                                                    <textarea title="Alasan" data-parsley-required="true" data-parsley-required-message="Wajib diisi" th:maxlength="200" class="form-control" id="remarks" name="remarks" rows="2" placeholder="Alasan.."></textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -91,10 +96,10 @@
                                                             <i class="fa fa-calendar"></i>
                                                         </span>
                                                 </div>
-                                                <input data-parsley-required="true" data-parsley-required-message="Wajib diisi" type="text" class="js-datepicker form-control form-control-sm" id="date-request"
+                                                <input title="Tanggal Penggunan" data-parsley-required="true" data-parsley-required-message="Wajib diisi" type="text" class="js-datepicker form-control form-control-sm" id="date-request"
                                                        name="useDate" data-week-start="1" data-autoclose="true"
                                                        data-today-highlight="true" data-date-format="yyyy/mm/dd"
-                                                       placeholder="dd-mm-yyyy"/>
+                                                       placeholder="yyyy-MM-dd"/>
                                             </div>
                                         </div>
                                     </div>
@@ -122,24 +127,23 @@
                                         </thead>
                                         <tbody>
                                         <tr th:each="itemCarts : ${itemCart.entrySet()}">
-                                            <td class="text-left">
-                                                <div th:inline="text" class="col-md-2"></div>[[${itemCarts.getKey().itemBarcode}]]</td>
-                                            <td th:inline="text" class="font-w600">[[${itemCarts.getKey().itemName}]]</td>
-                                            <td th:inline="text" >[[${itemCarts.getKey().unitItem.unitName}]]</td>
-                                            <td >
+                                                <td class="text-left"><div th:inline="text" class="col-md-2"><input type="hidden" name="itemId" th:value="${itemCarts.getValue().masterItem.itemId}"></div>[[${itemCarts.getValue().masterItem.itemBarcode}]]</td>
+                                                <td th:inline="text" class="font-w600"><input type="hidden" name="itemName" th:value="${itemCarts.getValue().masterItem.itemName}">[[${itemCarts.getValue().masterItem.itemName}]]</td>
+                                                <td th:inline="text" ><input type="hidden" name="unitName" th:value="${itemCarts.getValue().masterItem.unitItem.unitName}">[[${itemCarts.getValue().masterItem.unitItem.unitName}]]</td>
+                                                <td >
                                                 <div class="quantity buttons_added">
-                                                    <input data-parsley-validate="false" type="button" value="-" class="minus"><input data-parsley-validate="false" type="number" step="1" min="1" max="" name="quantity" th:value="${itemCarts.getValue()}" title="Qty" class="input-text qty text" ><input data-parsley-validate="false" type="button" value="+" class="plus">
+                                                    <button type="button" class="minus">-</button><input data-parsley-validation-threshold="1" data-parsley-trigger="keyup" data-parsley-type="integer" type="number" step="1" min="1" max="9000" name="quantity" th:value="${itemCarts.getValue().quantity}" title="Qty" class="input-text qty text" ><button type="button" class="plus">+</button>
                                                 </div>
                                             </td>
-                                            <td th:inline="text">
-                                                <input type="text" th:name="itemRemarks" th:maxlength="30" />
+                                                <td th:inline="text">
+                                                <input type="text" name="itemRemarks" th:value="${itemCarts.getValue().itemRemarks}" th:maxlength="30" />
                                             </td>
-                                            <td class="text-center">
+                                                <td class="text-center">
                                                 <div class="btn-group">
-                                                    <a type="button" th:href="@{'/app/purchasing/request/updateItem/{itemId}'(itemId=${itemCarts.getKey().itemId})}" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Tambah">
-                                                        <i class="fa fa-plus-circle"></i>
-                                                    </a>
-                                                    <a type="button" th:href="@{'/app/purchasing/request/removeItem/'+ ${itemCarts.getKey().itemId}}" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Hapus">
+                                                    <!--<a type="button" th:href="@{'/app/purchasing/request/updateItem/{itemId}'(itemId=${itemCarts.getKey().masterItem.itemId})}" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Tambah">-->
+                                                        <!--<i class="fa fa-plus-circle"></i>-->
+                                                    <!--</a>-->
+                                                    <a type="button" th:href="@{'/app/purchasing/request/removeItem/'+ ${itemCarts.getValue().masterItem.itemId}}" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Hapus">
                                                         <i class="fa fa-times"></i>
                                                     </a>
                                                 </div>
@@ -176,8 +180,7 @@
             </div>
             <div class="block-content">
                 <div class="block-content block-content-full">
-                    <p>Halaman ini digunakan untuk membuat kategori barang baru. Mohon penulisan nama kategori disesuaikan dengan yang sudah ada. Disarankan menggunakan penulisan Camel Case <small>contoh: </small><strong>Makanan / Minuman</strong>. Gunakan huruf kapital pada setiap huruf awal.</p>
-
+                    <p>Silahkan pilih barang yang akan anda minta dan masukan qty yang diperlukan.</p>
                     <!-- DataTables init on table by adding .js-dataTable-full-pagination class, functionality initialized in js/pages/be_tables_datatables.js -->
                     <table id="myItem" class="table table-responsive table-borderless table-striped" style="width:100%">
                         <thead>
@@ -185,23 +188,35 @@
                             <th>Pilih</th>
                             <th class="text-left">Barcode</th>
                             <th class="" >Nama Item</th>
-                            <th class="d-none d-sm-table-cell">Satuan</th>
+                            <th class="d-none d-sm-table-cell">Unit</th>
                             <th class="text-center">Kategori</th>
-                            <th class="text-center">Masukan Item</th>
+                            <th class="text-center">QTY</th>
+                            <th class="text-center">Keterangan</th>
+                            <!--<th class="text-center">Masukan Item</th>-->
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="item : ${itemList}">
-                            <td class="text-center"></td>
+                            <form action="/app/purchasing/request/addItem/" th:autocomplete="off" th:object="${itemReqForm}">
+                            <td class="text-center"><input type="hidden" name="itemId" th:value="${item.itemId}"></td>
                             <td style="text-align:left;" th:text="${item.itemBarcode}"></td>
                             <td class="font-w600" th:text="${item.itemName}"></td>
                             <td class="d-none d-sm-table-cell" th:text="${item.unitItem.unitName}"></td>
                             <td style="text-align:center;" th:text="${item.categoryItem.categoryName}"></td>
-                            <td>
-                                <a th:href="@{'/app/purchasing/request/addItem/{itemId}'(itemId=${item.itemId})}">
-                                    <button type="button" class="btn btn-alt-primary" th:text="Tambah">Tambah</button>
-                                </a>
+                            <td >
+                                <div class="quantity buttons_added">
+                                    <input data-parsley-validate="false" type="button" value="-" class="minus"><input data-parsley-validate="false" type="number" step="1" min="1" max="" value="1" th:name="quantity" th:id="quantity" title="Qty" class="input-text qty text" ><input data-parsley-validate="false" type="button" value="+" class="plus">
+                                </div>
                             </td>
+                            <td th:inline="text">
+                                <input type="text" th:name="itemRemarks" th:id="itemRemarks" th:maxlength="30" />
+                            </td>
+                            <!--<td>-->
+                                <!--&lt;!&ndash;<a th:href="@{'/app/purchasing/request/addItem/{itemId}'(itemId=${item.itemId})}">&ndash;&gt;-->
+                                    <!--<button type="submit" class="btn btn-alt-primary" th:text="Tambah">Tambah</button>-->
+
+                            <!--</td>-->
+                            </form>
                         </tr>
                         </tbody>
                     </table>
@@ -231,6 +246,18 @@
     });
 </script>
 <script>
+    jQuery(function() {
+        var datepicker = $('input.js-datepicker');
+
+        var date = new Date();
+        var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+        $('#date-request').datepicker({
+            minDate: today
+        });
+    });
+</script>
+<script>
     $(document).ready(function() {
         var table = $('#myItem').DataTable( {
             dom: 'Bfrtip',
@@ -239,6 +266,12 @@
                 style: 'multi'
             },
             language: {
+                "lengthMenu"    : "Menampilkan _MENU_ record per halaman",
+                "zeroRecords"   : "Tabel Kosong",
+                "info"          : "Menampilkan halaman _PAGE_ dari _PAGES_",
+                "infoEmpty"     : "Tidak ada data ditemukan.",
+                "infoFiltered"  : "(ditemukan _MAX_ jumlah records)",
+                "processing"    : "Proses menampilkan data...",
                 select: {
                     rows: {
                         _: "Kamu memilih %d barang",
@@ -266,11 +299,28 @@
                     }
                 },
                 {
-                    text: 'Input pilihan',
-                    action: function () {
-                        var s = table.rows('.selected').data();
-                        var itemId = s['itemId'];
-                        console.log(itemId);
+                    text: 'Masukan pilihan',
+                    action: function (e) {
+                        e.preventDefault();
+                       // var s = table.rows('.selected').data();
+                        var selectedRowInputs = $('.selected input').serialize();
+
+                        //use the serialized version of selectedRowInputs as the data
+                        //to be sent to the AJAX request
+                        var getUrl = window.location;
+                        var baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+
+                        $.ajax({
+                            type: "GET",
+                            url: baseUrl + "/purchasing/request/addItem/?" + selectedRowInputs
+                        })
+
+                        //console.log(selectedRowInputs + baseUrl);
+
+                        $('#myModal').modal('hide');
+                        location.replace(baseUrl + "/purchasing/request");
+
+                      //  console.log(rowData);
 
                     }
                 }

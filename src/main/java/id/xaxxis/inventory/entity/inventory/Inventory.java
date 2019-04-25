@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 @Data
 @EqualsAndHashCode
 public class Inventory {
+
     @EmbeddedId
     private InventoryId inventoryId = new InventoryId();
 

@@ -1,13 +1,13 @@
 package id.xaxxis.inventory.dao.inventory;
 
 import id.xaxxis.inventory.entity.inventory.Inventory;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.jpa.datatables.repository.DataTablesRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface InventoryDao extends PagingAndSortingRepository<Inventory, String> {
+public interface InventoryDao extends DataTablesRepository<Inventory, String> {
     List<Inventory> findAllByMasterLocation_LocationId(String locationId);
     List<Inventory> findAll();
     List<Inventory> findAllByMasterLocation_LocationIdAndAndMasterItem_ItemId(String loactionId, String itemId);

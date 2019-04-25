@@ -1,0 +1,178 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      layout:decorate="layout">
+<head th:replace="layout :: common-header">
+    <title>E-Customer Register</title>
+</head>
+<body>
+<style>
+    .modal-lg {
+        max-width: 80%;
+    }
+</style>
+<div id="page-container" class="sidebar-o sidebar-inverse side-scroll page-header-glass page-header-inverse main-content-boxed side-trans-enabled">
+    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="fragments/control-sidebar"></div>
+    <div th:replace="fragments/sidebar"></div>
+
+    <main id="main-container" style="min-height: 630px;">
+        <div class="bg-image" th:style="'background-image: url(' + @{/assets/img/photos/photo26@2x.jpg} + ');'">
+            <div class="bg-black-op-75">
+                <div class="content content-top content-full text-center">
+                    <div class="py-20">
+                        <h1 class="h2 font-w700 text-white mb-10">Daftar Purchase Request</h1>
+                        <h2 class="h4 font-w400 text-white-op mb-0">Anda berada dimenu data permintaan barang.</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Content -->
+        <div class="content">
+            <div sec:authorize="isAuthenticated()">
+                <div sec:authorize="hasRole('ROLE_ADMIN')">
+                    <div class="row gutters-tiny">
+                <!-- Pending -->
+                <div class="col-md-6 col-xl-3">
+                    <a class="block block-rounded block-transparent bg-gd-sun" href="javascript:void(0)">
+                        <div class="block-content block-content-full block-sticky-options">
+                            <div class="block-options">
+                                <div class="block-options-item">
+                                    <i class="fa fa-spinner fa-spin text-white-op"></i>
+                                </div>
+                            </div>
+                            <div class="py-20 text-center">
+                                <div class="font-size-h2 font-w700 mb-0 text-white" data-toggle="countTo" th:attr="data-to=${proses}">0</div>
+                                <div class="font-size-sm font-w600 text-uppercase text-white-op">Proses</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <!-- END Pending -->
+
+                <!-- Canceled -->
+                <div class="col-md-6 col-xl-3">
+                    <a class="block block-rounded block-transparent bg-gd-cherry" href="javascript:void(0)">
+                        <div class="block-content block-content-full block-sticky-options">
+                            <div class="block-options">
+                                <div class="block-options-item">
+                                    <i class="fa fa-times text-white-op"></i>
+                                </div>
+                            </div>
+                            <div class="py-20 text-center">
+                                <div class="font-size-h2 font-w700 mb-0 text-white" data-toggle="countTo" th:attr="data-to=${batal}"></div>
+                                <div class="font-size-sm font-w600 text-uppercase text-white-op">Dibatalkan</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <!-- END Canceled -->
+
+                <!-- Completed -->
+                <div class="col-md-6 col-xl-3">
+                    <a class="block block-rounded block-transparent bg-gd-lake" href="javascript:void(0)">
+                        <div class="block-content block-content-full block-sticky-options">
+                            <div class="block-options">
+                                <div class="block-options-item">
+                                    <i class="fa fa-check text-white-op"></i>
+                                </div>
+                            </div>
+                            <div class="py-20 text-center">
+                                <div class="font-size-h2 font-w700 mb-0 text-white" data-toggle="countTo" th:attr="data-to=${selesai}">0</div>
+                                <div class="font-size-sm font-w600 text-uppercase text-white-op">Selesai</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <!-- END Completed -->
+
+                <!-- All -->
+                <div class="col-md-6 col-xl-3">
+                    <a class="block block-rounded block-transparent bg-gd-dusk" href="javascript:void(0)">
+                        <div class="block-content block-content-full block-sticky-options">
+                            <div class="block-options">
+                                <div class="block-options-item">
+                                    <i class="fa fa-archive text-white-op"></i>
+                                </div>
+                            </div>
+                            <div class="py-20 text-center">
+                                <div class="font-size-h2 font-w700 mb-0 text-white" data-toggle="countTo" th:attr="data-to=${tertunda}">0</div>
+                                <div class="font-size-sm font-w600 text-uppercase text-white-op">Tertunda</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <!-- END All -->
+            </div>
+                </div>
+            </div>
+            <!-- END Statistics -->
+
+            <!-- Orders -->
+            <div class="content-heading">
+                <div class="form-group row">
+                    <label class="col-4 small col-form-label" for="locations">Filter Lokasi Kerja</label>
+                    <div class="col-sm-8">
+                        <select class="js-select2 form-control" id="locations" data-placeholder="Filter data berdasarkan Lokasi Kerja.." th:multiple="multiple">
+                            <option th:each="location : ${locations}"
+                                    th:value="${location.locationName}"
+                                    th:text="${location.locationName}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-4 small col-form-label" for="status">Filter Status</label>
+                    <div class="col-sm-8">
+                        <select class="js-select2 form-control" id="status" data-placeholder="Filter data status.." th:multiple="multiple">
+                            <option th:each="st : ${status}"
+                                    th:value="${st.name()}"
+                                    th:text="${st.name()}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="block block-rounded">
+                <div class="block-content bg-body-light">
+                </div>
+                <div class="block-content">
+                    <!-- Orders Table -->
+                    <table id="prs" class="table table-responsive table-borderless table-striped">
+                        <thead>
+                        <tr>
+                            <th style="width: 100px;">No PR</th>
+                            <th style="width: 10%;">Status</th>
+                            <th style="width: 10px;"class="d-none d-sm-table-cell">DiAjukan</th>
+                            <th class="d-none d-sm-table-cell">Alasan</th>
+                            <th class="d-none d-sm-table-cell">Oleh</th>
+                            <th class="text-right">Lokasi</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <!-- END Orders -->
+        </div>
+        <!-- END Page Content -->
+    </main>
+</div>
+
+<div th:replace="layout :: page-footer"/>
+
+
+<div th:replace="layout :: body-bottom-scripts"/>
+<script th:src="@{/assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}"></script>
+<script th:src="@{/assets/js/plugins/DataTables/datatables.min.js}"></script>
+<script th:src="@{/assets/js/plugins/select2/select2.full.min.js}"></script>
+<script th:src="@{/assets/js/plugins/moment/datetime.js}"></script>
+<script th:src="@{/assets/js/jquery.spring-friendly.js}"></script>
+<script th:src="@{/assets/js/pages/pr-list.js}"></script>
+ <!--Page JS Code -->
+<script>
+    jQuery(function () {
+        Codebase.helpers(['select2', 'tags-inputs', 'datepicker']);
+    });
+</script>
+</body>
+</html>

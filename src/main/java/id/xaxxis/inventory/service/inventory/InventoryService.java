@@ -12,5 +12,5 @@ public interface InventoryService {
     List<Inventory> findAllBylocationAndItem(String locationId, String itemId);
     List<Inventory> findAllByItemCategoryAndLocation(String categoryId);
 
-    Inventory findByInventoryId(String itemId, String locaitonId, String outletId);
+    Inventory findByInventoryId(String itemId, String outletId);
 }

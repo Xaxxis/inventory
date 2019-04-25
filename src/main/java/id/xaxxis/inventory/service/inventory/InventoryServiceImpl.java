@@ -52,7 +52,9 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public Inventory findByInventoryId(String itemId, String locaitonId, String outletId) {
+    public Inventory findByInventoryId(String itemId, String outletId) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String locaitonId = user.getMasterLocation().getLocationId();
         return inventoryDao.findByInventoryId_ItemIdAndInventoryId_LocationIdAndInventoryId_OutletId(itemId,locaitonId,outletId);
     }
 

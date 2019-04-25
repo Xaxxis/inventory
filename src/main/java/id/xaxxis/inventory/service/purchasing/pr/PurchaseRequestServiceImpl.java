@@ -2,15 +2,20 @@ package id.xaxxis.inventory.service.purchasing.pr;
 
 import id.xaxxis.inventory.dao.purchasing.PurchaseRequestDao;
 import id.xaxxis.inventory.dao.purchasing.PurchaseRequestItemDao;
-import id.xaxxis.inventory.entity.master.item.MasterItem;
+import id.xaxxis.inventory.dto.purchasing.PurchaseRequestCart;
 import id.xaxxis.inventory.entity.master.location.MasterLocation;
 import id.xaxxis.inventory.entity.master.user.User;
-import id.xaxxis.inventory.entity.purchasing.PurchaseRequest;
-import id.xaxxis.inventory.entity.purchasing.PurchaseRequestItem;
+import id.xaxxis.inventory.entity.purchasing.pr.PurchaseRequest;
+import id.xaxxis.inventory.entity.purchasing.pr.PurchaseRequestItem;
 import id.xaxxis.inventory.enums.RequestStatus;
+import id.xaxxis.inventory.utils.purchasing.PrLocationSpesification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -34,40 +39,35 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
         this.purchaseRequestItemDao = purchaseRequestItemDao;
     }
 
-    private Map<MasterItem, Integer> masterItems = new HashMap<>();
+    private Map<String, PurchaseRequestCart> prCarts = new HashMap<>();
 
     @Override
-    public void addItem(MasterItem masterItem) {
-        if(masterItems.containsKey(masterItem)) {
-            masterItems.replace(masterItem, masterItems.get(masterItem) + 1);
-        } else {
-            masterItems.put(masterItem, 1);
-        }
+    public long countByStatus(RequestStatus status) {
+        return purchaseRequestDao.countByRequestStatus(status);
     }
 
     @Override
-    public void removeItem(MasterItem masterItem) {
-        if(masterItems.containsKey(masterItem)) {
-            if(masterItems.get(masterItem) > 1)
-                masterItems.replace(masterItem, masterItems.get(masterItem) - 1);
-            else if(masterItems.get(masterItem) == 1) {
-                masterItems.remove(masterItem);
-            }
-        }
+    public void addItem(PurchaseRequestCart prCart, String itemId) {
+        prCarts.put(itemId, prCart);
     }
 
     @Override
-    public void updateItem(MasterItem masterItem, Integer qty) {
-        if(masterItems.containsKey(masterItem)){
-            masterItems.replace(masterItem, masterItems.get(masterItem) + qty);
-        } else {
-            masterItems.put(masterItem, 1);
-        }
+    public void removeItem(String itemId) {
+        prCarts.remove(itemId);
     }
 
     @Override
-    public Map<MasterItem, Integer> getItemInCart() {
-        return Collections.unmodifiableMap(masterItems);
+    public void updateItem(PurchaseRequestCart prCart, String itemId) {
+        PurchaseRequestCart pc = prCarts.get(itemId);
+        pc.setItemRemarks(prCart.getItemRemarks());
+        pc.setQuantity(prCart.getQuantity());
+        prCarts.put(itemId, pc);
+
+    }
+
+    @Override
+    public Map<String, PurchaseRequestCart> getItemInCart() {
+       return Collections.unmodifiableMap(prCarts);
     }
 
     @Override
@@ -82,34 +82,71 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
         purchaseRequest.setPurchaseRequestNumber(generatePrNumber());
         purchaseRequestDao.save(purchaseRequest);
 
-        for(Map.Entry<MasterItem, Integer> entry : masterItems.entrySet()) {
+        for(Map.Entry<String, PurchaseRequestCart> entry : prCarts.entrySet()) {
             final String uuid = UUID.randomUUID().toString().replace("-", "");
             purchaseRequestItem.setRequestItemId(uuid);
-            purchaseRequestItem.setMasterItems(entry.getKey());
-            purchaseRequestItem.setQuantity(entry.getValue());
-            purchaseRequestItem.setItemRemarks(purchaseRequestItem.getItemRemarks());
+            purchaseRequestItem.setMasterItems(entry.getValue().getMasterItem());
+            purchaseRequestItem.setQuantity(entry.getValue().getQuantity());
+            purchaseRequestItem.setItemRemarks(entry.getValue().getItemRemarks());
             purchaseRequestItem.setPurchaseRequest(purchaseRequest);
             purchaseRequestItemDao.save(purchaseRequestItem);
         }
-        masterItems.clear();
+        prCarts.clear();
     }
 
-    private final static String prefix = "PR/";
+    private final static String prefix = "PR";
 
     @Override
     public String generatePrNumber() {
-        Long rs = purchaseRequestDao.count();
+        Date date = Calendar.getInstance().getTime();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String newDate = dateFormat.format(date);
+        Long rs = purchaseRequestDao.countByUseDate(newDate);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
         String location = user.getMasterLocation().getLocationName();
         if (rs != null) {
-            Date date = Calendar.getInstance().getTime();
-            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-            String strDate = dateFormat.format(date);
+            DateFormat formats = new SimpleDateFormat("dd-MM-yy");
+            String strDate = formats.format(date);
             int ids = rs.intValue() + 101;
             String generatedId = new Integer(ids).toString();
-            return prefix + strDate.replace("-", "") + "/" + user.getFirstName().toUpperCase() + "/" + location.replace(" ", "").toUpperCase()+ "/" +generatedId ;
+            return prefix + strDate.replace("-", "") +"."+ generatedId +date.getSeconds();
         }
         return null ;
+    }
+
+    @Override
+    public DataTablesOutput<PurchaseRequest> findAll(DataTablesInput input) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+        String locationId = user.getMasterLocation().getLocationId();
+        if (!locationId.equals("ff8080816985d94101698633a8ad0000")) {
+            PrLocationSpesification spec = new PrLocationSpesification();
+            return purchaseRequestDao.findAll(input,spec);
+        }
+        return purchaseRequestDao.findAll(input);
+    }
+
+
+    @Override
+    public Page<PurchaseRequest> findAllByCreatedDate(String date, Pageable pageable) {
+        return purchaseRequestDao.findAllByCreatedDate(date, pageable);
+    }
+
+    @Override
+    public PurchaseRequest findByPrNumber(String prNumber) {
+        return purchaseRequestDao.findByPurchaseRequestNumber(prNumber);
+    }
+
+    @Override
+    public PurchaseRequest findByPrId(String prId) {
+        return purchaseRequestDao.findByPurchaseReqId(prId);
+    }
+
+    @Override
+    public List<PurchaseRequestItem> findAllItemReq(String id) {
+        PurchaseRequest purchaseRequest = purchaseRequestDao.findByPurchaseReqId(id);
+        List<PurchaseRequestItem> purchaseRequestItemList = purchaseRequest.getRequestItemList();
+        return purchaseRequestItemList;
     }
 }

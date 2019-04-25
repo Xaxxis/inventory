@@ -24,7 +24,7 @@ public class InventoryId implements Serializable {
     public InventoryId() {
     }
 
-    public InventoryId(String itemId, String locationId, String outletId) {
+    public InventoryId( String itemId, String locationId, String outletId) {
         this.itemId = itemId;
         this.locationId = locationId;
         this.outletId = outletId;

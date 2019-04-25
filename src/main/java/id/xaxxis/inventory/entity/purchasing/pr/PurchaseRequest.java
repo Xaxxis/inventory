@@ -1,10 +1,16 @@
-package id.xaxxis.inventory.entity.purchasing;
+package id.xaxxis.inventory.entity.purchasing.pr;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import id.xaxxis.inventory.entity.BaseEntity;
 import id.xaxxis.inventory.entity.master.location.MasterLocation;
 import id.xaxxis.inventory.entity.master.user.User;
 import id.xaxxis.inventory.enums.RequestStatus;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,8 +19,9 @@ import java.util.List;
 
 @Entity
 @Data
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "purchase_request")
-public class PurchaseRequest {
+public class PurchaseRequest extends BaseEntity {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -26,24 +33,19 @@ public class PurchaseRequest {
     private String remarks;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "use_date")
+    @Column(name = "use_date", nullable = false)
     private Date useDate;
 
-    @GenericGenerator(
-            name = "assigned-identity",
-            strategy = "id.xaxxis.inventory.utils.PRNumberGenerator"
-    )
-    @GeneratedValue(
-            generator = "assigned-identity",
-            strategy = GenerationType.IDENTITY
-    )
-    @Column(name = "pr_number", nullable = false, length = 50)
+    @Column(name = "pr_number", nullable = false, length = 50, unique = true)
     private String purchaseRequestNumber;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @JsonManagedReference
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "address"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id")
     private MasterLocation masterLocation;
@@ -52,10 +54,12 @@ public class PurchaseRequest {
     @Column(name = "status", length = 30)
     private RequestStatus requestStatus;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<PurchaseRequestItem> requestItemList = new ArrayList<>();
 
     @Version
     @Column(name = "version")
     private Integer version;
+
 }
