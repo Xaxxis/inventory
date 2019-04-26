@@ -55,15 +55,15 @@ public class Inventory {
     public Inventory() {
     }
 
-    public Inventory(InventoryId inventoryId, MasterItem masterItem, MasterLocation masterLocation, Outlet outlet, BigDecimal costPrice, BigDecimal sellPrice, Integer stock, Boolean isActive) {
+    public Inventory(InventoryId inventoryId, MasterItem masterItem, MasterLocation masterLocation, Outlet outlet, Suplier suplier, BigDecimal costPrice, BigDecimal sellPrice, Integer stock, Boolean isActive) {
         this.inventoryId = inventoryId;
         this.masterItem = masterItem;
         this.masterLocation = masterLocation;
         this.outlet = outlet;
+        this.suplier = suplier;
         this.costPrice = costPrice;
         this.sellPrice = sellPrice;
         this.stock = stock;
         this.isActive = isActive;
     }
-
 }
