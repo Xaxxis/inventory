@@ -55,7 +55,7 @@ public class PurchaseRequest extends BaseEntity {
     private RequestStatus requestStatus;
 
     @JsonBackReference
-    @OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<PurchaseRequestItem> requestItemList = new ArrayList<>();
 
     @Version

@@ -3,7 +3,7 @@ package id.xaxxis.inventory.entity.purchasing.pr;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import id.xaxxis.inventory.entity.BaseEntity;
-import id.xaxxis.inventory.entity.master.item.MasterItem;
+import id.xaxxis.inventory.entity.inventory.Inventory;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -28,12 +28,16 @@ public class PurchaseRequestItem extends BaseEntity {
     @JsonManagedReference
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id", nullable = false)
-    private MasterItem masterItems;
+    @JoinColumn(name = "inv_id", nullable = false)
+    private Inventory inventory;
 
-    @Column(name = "qty",  nullable = false, length = 7)
+    @Column(name = "req_qty",  nullable = false, length = 7)
     @Digits(integer = 5, fraction = 1)
-    private Integer quantity;
+    private Integer qtyReq;
+
+    @Column(name = "rev_qty",  nullable = false, length = 7)
+    @Digits(integer = 5, fraction = 1)
+    private Integer qtyRev;
 
     @Column(name = "item_remarks", length = 100)
     private String itemRemarks;
@@ -41,10 +45,11 @@ public class PurchaseRequestItem extends BaseEntity {
     public PurchaseRequestItem() {
     }
 
-    public PurchaseRequestItem(PurchaseRequest purchaseRequest, MasterItem masterItems, @Digits(integer = 5, fraction = 1) Integer quantity, String itemRemarks) {
+    public PurchaseRequestItem(PurchaseRequest purchaseRequest, Inventory inventory, @Digits(integer = 5, fraction = 1) Integer qtyReq, @Digits(integer = 5, fraction = 1) Integer qtyRev, String itemRemarks) {
         this.purchaseRequest = purchaseRequest;
-        this.masterItems = masterItems;
-        this.quantity = quantity;
+        this.inventory = inventory;
+        this.qtyReq = qtyReq;
+        this.qtyRev = qtyRev;
         this.itemRemarks = itemRemarks;
     }
 }

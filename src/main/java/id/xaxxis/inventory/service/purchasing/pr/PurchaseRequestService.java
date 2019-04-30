@@ -38,4 +38,6 @@ public interface PurchaseRequestService {
 
     List<PurchaseRequestItem> findAllItemReq(String id);
 
+    PurchaseRequestItem deleteItemReq(String id);
+
 }

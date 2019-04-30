@@ -2,6 +2,7 @@ package id.xaxxis.inventory.entity.master.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import id.xaxxis.inventory.entity.master.location.MasterLocation;
+import id.xaxxis.inventory.entity.master.location.Outlet;
 import id.xaxxis.inventory.security.Authority;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
@@ -50,6 +51,10 @@ public class User implements UserDetails {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id")
     private MasterLocation masterLocation;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "outlet_id")
+    private Outlet outlet;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JsonIgnore

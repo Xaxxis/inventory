@@ -38,6 +38,7 @@ public class UserController {
         model.addAttribute("openUser", "open");
         model.addAttribute("roleList", roleService.findAll());
         model.addAttribute("locationList", masterLocationService.findAll());
+        model.addAttribute("outletList", masterLocationService.findAllOutlet());
         return "admin/user/user-signup";
     }
 
@@ -74,6 +75,7 @@ public class UserController {
         User user = userService.findByUserId(newUser.getUserId());
         user.setRoles(newUser.getRoles());
         user.setMasterLocation(newUser.getMasterLocation());
+        user.setOutlet(newUser.getOutlet());
         user.setEnabled(newUser.isEnabled());
         userService.saveUser(user);
         return "redirect:/app/user/list";

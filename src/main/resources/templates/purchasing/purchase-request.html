@@ -127,12 +127,12 @@
                                         </thead>
                                         <tbody>
                                         <tr th:each="itemCarts : ${itemCart.entrySet()}">
-                                                <td class="text-left"><div th:inline="text" class="col-md-2"><input type="hidden" name="itemId" th:value="${itemCarts.getValue().masterItem.itemId}"></div>[[${itemCarts.getValue().masterItem.itemBarcode}]]</td>
-                                                <td th:inline="text" class="font-w600"><input type="hidden" name="itemName" th:value="${itemCarts.getValue().masterItem.itemName}">[[${itemCarts.getValue().masterItem.itemName}]]</td>
-                                                <td th:inline="text" ><input type="hidden" name="unitName" th:value="${itemCarts.getValue().masterItem.unitItem.unitName}">[[${itemCarts.getValue().masterItem.unitItem.unitName}]]</td>
+                                                <td class="text-left"><div th:inline="text" class="col-md-2"><input type="hidden" name="itemId" th:value="${itemCarts.getValue().inventory.invId}"></div>[[${itemCarts.getValue().inventory.masterItem.itemBarcode}]]</td>
+                                                <td th:inline="text" class="font-w600"><input type="hidden" name="itemName" th:value="${itemCarts.getValue().inventory.masterItem.itemName}">[[${itemCarts.getValue().inventory.masterItem.itemName}]]</td>
+                                                <td th:inline="text" ><input type="hidden" name="unitName" th:value="${itemCarts.getValue().inventory.masterItem.unitItem.unitName}">[[${itemCarts.getValue().inventory.masterItem.unitItem.unitName}]]</td>
                                                 <td >
                                                 <div class="quantity buttons_added">
-                                                    <button type="button" class="minus">-</button><input data-parsley-validation-threshold="1" data-parsley-trigger="keyup" data-parsley-type="integer" type="number" step="1" min="1" max="9000" name="quantity" th:value="${itemCarts.getValue().quantity}" title="Qty" class="input-text qty text" ><button type="button" class="plus">+</button>
+                                                    <button type="button" class="minus">-</button><input data-parsley-validation-threshold="1" data-parsley-trigger="keyup" data-parsley-type="integer" type="number" step="1" min="1" max="9000" name="quantity" th:value="${itemCarts.getValue().qtyReq}" title="Qty" class="input-text qty text" ><button type="button" class="plus">+</button>
                                                 </div>
                                             </td>
                                                 <td th:inline="text">
@@ -143,7 +143,7 @@
                                                     <!--<a type="button" th:href="@{'/app/purchasing/request/updateItem/{itemId}'(itemId=${itemCarts.getKey().masterItem.itemId})}" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Tambah">-->
                                                         <!--<i class="fa fa-plus-circle"></i>-->
                                                     <!--</a>-->
-                                                    <a type="button" th:href="@{'/app/purchasing/request/removeItem/'+ ${itemCarts.getValue().masterItem.itemId}}" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Hapus">
+                                                    <a type="button" th:href="@{'/app/purchasing/request/removeItem/'+ ${itemCarts.getValue().inventory.invId}}" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Hapus">
                                                         <i class="fa fa-times"></i>
                                                     </a>
                                                 </div>
@@ -182,43 +182,21 @@
                 <div class="block-content block-content-full">
                     <p>Silahkan pilih barang yang akan anda minta dan masukan qty yang diperlukan.</p>
                     <!-- DataTables init on table by adding .js-dataTable-full-pagination class, functionality initialized in js/pages/be_tables_datatables.js -->
-                    <table id="myItem" class="table table-responsive table-borderless table-striped" style="width:100%">
+                    <table id="inv" class="table table-responsive table-borderless table-striped" style="width:100%">
                         <thead>
                         <tr>
                             <th>Pilih</th>
                             <th class="text-left">Barcode</th>
                             <th class="" >Nama Item</th>
                             <th class="d-none d-sm-table-cell">Unit</th>
-                            <th class="text-center">Kategori</th>
+                            <th class="text-center">Stok</th>
+                            <th class="text-center">Outlet</th>
+                            <th class="text-center">Lokasi</th>
                             <th class="text-center">QTY</th>
                             <th class="text-center">Keterangan</th>
                             <!--<th class="text-center">Masukan Item</th>-->
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr th:each="item : ${itemList}">
-                            <form action="/app/purchasing/request/addItem/" th:autocomplete="off" th:object="${itemReqForm}">
-                            <td class="text-center"><input type="hidden" name="itemId" th:value="${item.itemId}"></td>
-                            <td style="text-align:left;" th:text="${item.itemBarcode}"></td>
-                            <td class="font-w600" th:text="${item.itemName}"></td>
-                            <td class="d-none d-sm-table-cell" th:text="${item.unitItem.unitName}"></td>
-                            <td style="text-align:center;" th:text="${item.categoryItem.categoryName}"></td>
-                            <td >
-                                <div class="quantity buttons_added">
-                                    <input data-parsley-validate="false" type="button" value="-" class="minus"><input data-parsley-validate="false" type="number" step="1" min="1" max="" value="1" th:name="quantity" th:id="quantity" title="Qty" class="input-text qty text" ><input data-parsley-validate="false" type="button" value="+" class="plus">
-                                </div>
-                            </td>
-                            <td th:inline="text">
-                                <input type="text" th:name="itemRemarks" th:id="itemRemarks" th:maxlength="30" />
-                            </td>
-                            <!--<td>-->
-                                <!--&lt;!&ndash;<a th:href="@{'/app/purchasing/request/addItem/{itemId}'(itemId=${item.itemId})}">&ndash;&gt;-->
-                                    <!--<button type="submit" class="btn btn-alt-primary" th:text="Tambah">Tambah</button>-->
-
-                            <!--</td>-->
-                            </form>
-                        </tr>
-                        </tbody>
                     </table>
                 </div>
             </div>
@@ -228,18 +206,13 @@
 <!-- END Modal Lokasi Baru -->
 
 
-<div th:replace="layout :: body-bottom-scripts"/>
+<div th:replace="layout :: body-bottom-scripts"></div>
 <script th:src="@{/assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}"></script>
 <script th:src="@{/assets/js/plugins/parsley/dist/parsley.min.js}"></script>
 <script th:src="@{/assets/js/plugins/parsley/dist/i18n/id.js}"></script>
-<!--<script th:src="@{/assets/js/plugins/datatables/jquery.dataTables.min.js}"></script>-->
-<!--<script th:src="@{/assets/js/plugins/datatables/dataTables.bootstrap4.min.js}"></script>-->
 
 <script th:src="@{/assets/js/plugins/DataTables/datatables.min.js}"></script>
-<!-- Page JS Code -->
-<!--<script th:src="@{/assets/js/pages/be_tables_datatables.js}"></script>-->
-
-<!-- Page JS Code -->
+<script th:src="@{/assets/js/jquery.spring-friendly.js}"></script>
 <script>
     jQuery(function () {
         Codebase.helpers(['select2', 'tags-inputs', 'datepicker']);
@@ -248,7 +221,6 @@
 <script>
     jQuery(function() {
         var datepicker = $('input.js-datepicker');
-
         var date = new Date();
         var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
@@ -259,19 +231,21 @@
 </script>
 <script>
     $(document).ready(function() {
-        var table = $('#myItem').DataTable( {
+        var table = $('table#inv').DataTable({
+            'ajax': '/app/inventory/list',
+            'serverSide': true,
             dom: 'Bfrtip',
             pageLength: 5,
             select: {
                 style: 'multi'
             },
             language: {
-                "lengthMenu"    : "Menampilkan _MENU_ record per halaman",
-                "zeroRecords"   : "Tabel Kosong",
-                "info"          : "Menampilkan halaman _PAGE_ dari _PAGES_",
-                "infoEmpty"     : "Tidak ada data ditemukan.",
-                "infoFiltered"  : "(ditemukan _MAX_ jumlah records)",
-                "processing"    : "Proses menampilkan data...",
+                "lengthMenu": "Menampilkan _MENU_ record per halaman",
+                "zeroRecords": "Data tidak ditemukan",
+                "info": "Menampilkan halaman _PAGE_ dari _PAGES_",
+                "infoEmpty": "Tidak ada data ditemukan.",
+                "infoFiltered": "",
+                "processing": "Proses menampilkan data...",
                 select: {
                     rows: {
                         _: "Kamu memilih %d barang",
@@ -285,6 +259,44 @@
                 className: 'select-checkbox',
                 targets:   0
             } ],
+            columns: [
+                {
+                    "data": "invId", defaultContent: '', orderable: false, "bSearchable": false,
+                    render: function (data) {
+                        return '<input type="hidden" name="itemId" value="'+data+'"/>';}
+                },
+                {
+                    "data": "masterItem.itemBarcode"
+                },
+                {
+                    "data": "masterItem.itemName"
+                },
+                {
+                    "data": "masterItem.unitItem.unitName",
+                },
+                {
+                    "data": "stock",
+                    render: function (data) { return data ? data : 'Kosong'; }
+                },
+                {
+                    "data": "outlet.outletName"
+                },
+                {
+                    "data": "masterLocation.locationName",
+                    render: function (data) { return data ? data : '-'; }
+                },
+                {
+                    "data": "stock",
+                    render: function (data) {
+                        return '<input data-parsley-validation-threshold="1" data-parsley-trigger="keyup" data-parsley-type="integer" type="number" step="1" min="1" max="9000" name="quantity" value="'+data+'" title="Qty" class="input-text qty text" >';
+                    }
+                },
+                {
+                    "data": "null", defaultContent: '', orderable: false, "bSearchable": false,
+                    render: function (data) {
+                        return '<input type="text" name="itemRemarks" value="'+data+'"/>';}
+                },
+            ],
             buttons: [
                 {
                     text: 'Pilih Semua',
@@ -302,7 +314,7 @@
                     text: 'Masukan pilihan',
                     action: function (e) {
                         e.preventDefault();
-                       // var s = table.rows('.selected').data();
+                        //var s = table.rows('.selected').data();
                         var selectedRowInputs = $('.selected input').serialize();
 
                         //use the serialized version of selectedRowInputs as the data
@@ -314,18 +326,16 @@
                             type: "GET",
                             url: baseUrl + "/purchasing/request/addItem/?" + selectedRowInputs
                         })
+                        console.log(selectedRowInputs);
 
-                        //console.log(selectedRowInputs + baseUrl);
-
-                        $('#myModal').modal('hide');
+                        $('#inv').modal('hide');
                         location.replace(baseUrl + "/purchasing/request");
 
-                      //  console.log(rowData);
 
                     }
                 }
             ]
-        } );
+        })
     });
 </script>
 </body>

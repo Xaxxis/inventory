@@ -5,8 +5,6 @@ import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
 
 @Entity
 @Data
@@ -21,7 +19,4 @@ public class CategoryItem {
 
     @Column(name = "category_name", length = 50, unique = true)
     private String categoryName;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "categoryItem")
-    private Collection<MasterItem> items = new ArrayList<>();
 }

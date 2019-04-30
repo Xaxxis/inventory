@@ -3,11 +3,15 @@ package id.xaxxis.inventory.service.inventory;
 import id.xaxxis.inventory.dao.inventory.InventoryDao;
 import id.xaxxis.inventory.entity.inventory.Inventory;
 import id.xaxxis.inventory.entity.master.user.User;
+import id.xaxxis.inventory.service.spesification.inventory.InventorySpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class InventoryServiceImpl implements InventoryService {
@@ -55,7 +59,23 @@ public class InventoryServiceImpl implements InventoryService {
     public Inventory findByInventoryId(String itemId, String outletId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String locaitonId = user.getMasterLocation().getLocationId();
-        return inventoryDao.findByInventoryId_ItemIdAndInventoryId_LocationIdAndInventoryId_OutletId(itemId,locaitonId,outletId);
+        return null;
+    }
+
+    @Override
+    public Optional<Inventory> findByInvId(String invId) {
+        return inventoryDao.findById(invId);
+    }
+
+    @Override
+    public DataTablesOutput<Inventory> findAllApi(DataTablesInput input) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String locationId = user.getMasterLocation().getLocationId();
+        if(locationId.equals("ff8080816985d94101698633a8ad0000")){
+            return inventoryDao.findAll(input);
+        }
+        InventorySpecification specification = new InventorySpecification();
+        return inventoryDao.findAll(input, specification);
     }
 
 

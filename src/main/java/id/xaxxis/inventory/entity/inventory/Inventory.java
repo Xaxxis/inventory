@@ -1,11 +1,14 @@
 package id.xaxxis.inventory.entity.inventory;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import id.xaxxis.inventory.entity.master.item.MasterItem;
 import id.xaxxis.inventory.entity.master.location.MasterLocation;
 import id.xaxxis.inventory.entity.master.location.Outlet;
 import id.xaxxis.inventory.entity.master.suplier.Suplier;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
@@ -18,21 +21,32 @@ import java.math.BigDecimal;
 @EqualsAndHashCode
 public class Inventory {
 
-    @EmbeddedId
-    private InventoryId inventoryId = new InventoryId();
+   @Id
+   @GenericGenerator(name = "uuid", strategy = "uuid")
+   @GeneratedValue(generator = "uuid")
+   @Column(name = "inv_id", length = 100)
+   private String invId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @MapsId("itemId")
+    @JsonManagedReference
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id")
     private MasterItem masterItem;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @MapsId("locationId")
+    @JsonManagedReference
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "address"})
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name ="location_d")
     private MasterLocation masterLocation;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @MapsId("outletId")
+    @JsonManagedReference
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "masterLocation"})
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name ="outlet_id")
     private Outlet outlet;
 
+    @JsonManagedReference
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "masterLocation"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "suplier_id")
     private Suplier suplier;
@@ -55,8 +69,7 @@ public class Inventory {
     public Inventory() {
     }
 
-    public Inventory(InventoryId inventoryId, MasterItem masterItem, MasterLocation masterLocation, Outlet outlet, Suplier suplier, BigDecimal costPrice, BigDecimal sellPrice, Integer stock, Boolean isActive) {
-        this.inventoryId = inventoryId;
+    public Inventory(MasterItem masterItem, MasterLocation masterLocation, Outlet outlet, Suplier suplier, @DecimalMin(value = "0.00", message = "*Nominal harga beli tidak boleh negatif") BigDecimal costPrice, @DecimalMin(value = "0.00", message = "*Nominal harga jual tidak boleh negatif") BigDecimal sellPrice, @Min(value = 0, message = "*Stok tidak boleh angka negatif") Integer stock, Boolean isActive) {
         this.masterItem = masterItem;
         this.masterLocation = masterLocation;
         this.outlet = outlet;

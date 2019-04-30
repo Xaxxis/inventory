@@ -12,6 +12,9 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class InventoryId implements Serializable {
 
+    @Column(name = "inv_id", length = 100)
+    private String invId;
+
     @Column(name = "item_id")
     private String itemId;
 

@@ -1,5 +1,7 @@
 package id.xaxxis.inventory.entity.master.item;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -23,10 +25,14 @@ public class MasterItem {
     @Column(name = "item_name", length = 100)
     private String itemName;
 
+    @JsonManagedReference
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private CategoryItem categoryItem;
 
+    @JsonManagedReference
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "unit_id", nullable = false)
     private UnitItem unitItem;

@@ -1,12 +1,12 @@
 package id.xaxxis.inventory.controller.purchasing;
 
-import id.xaxxis.inventory.dao.purchasing.PurchaseRequestDao;
 import id.xaxxis.inventory.dto.purchasing.PurchaseRequestCart;
-import id.xaxxis.inventory.entity.master.item.MasterItem;
+import id.xaxxis.inventory.entity.inventory.Inventory;
 import id.xaxxis.inventory.entity.master.suplier.Suplier;
 import id.xaxxis.inventory.entity.purchasing.pr.PurchaseRequest;
 import id.xaxxis.inventory.entity.purchasing.pr.PurchaseRequestItem;
 import id.xaxxis.inventory.enums.RequestStatus;
+import id.xaxxis.inventory.service.inventory.InventoryService;
 import id.xaxxis.inventory.service.master.item.MasterItemService;
 import id.xaxxis.inventory.service.master.location.MasterLocationService;
 import id.xaxxis.inventory.service.master.suplier.SuplierService;
@@ -30,18 +30,18 @@ public class PurchaseController {
     private final MasterLocationService masterLocationService;
     private final MasterItemService masterItemService;
     private final PurchaseRequestService purchaseRequestService;
-    private final PurchaseRequestDao purchaseRequestDao;
+    private final InventoryService inventoryService;
     @Autowired
     public PurchaseController(SuplierService suplierService,
                               MasterLocationService masterLocationService,
                               MasterItemService masterItemService,
                               PurchaseRequestService purchaseRequestService,
-                              PurchaseRequestDao purchaseRequestDao) {
+                              InventoryService inventoryService) {
         this.suplierService = suplierService;
         this.masterLocationService = masterLocationService;
         this.masterItemService = masterItemService;
         this.purchaseRequestService = purchaseRequestService;
-        this.purchaseRequestDao = purchaseRequestDao;
+        this.inventoryService = inventoryService;
     }
 
     @RequestMapping(value = "/suplier", method = RequestMethod.GET)
@@ -100,9 +100,9 @@ public class PurchaseController {
     @RequestMapping(value = "/request/getPR", method = RequestMethod.GET)
     public String getPR(@ModelAttribute("number") String prNumber, Model model) {
         PurchaseRequest purchaseRequest = purchaseRequestService.findByPrNumber(prNumber);
-        List<PurchaseRequestItem> purchaseRequestItemList = purchaseRequestService.findAllItemReq(purchaseRequest.getPurchaseReqId());
+        //List<PurchaseRequestItem> purchaseRequestItemList = purchaseRequestService.findAllItemReq(purchaseRequest.getPurchaseReqId());
         model.addAttribute("pr", purchaseRequest);
-        model.addAttribute("itemList", purchaseRequestItemList);
+        model.addAttribute("itemList", purchaseRequest.getRequestItemList());
         return "purchasing/request-detail";
     }
 
@@ -111,10 +111,11 @@ public class PurchaseController {
                                 @RequestParam("quantity") List<Integer> quantity,
                                 @RequestParam("itemRemarks") List<String> itemRemarks) {
         for(int i=0; i < itemId.size(); i++) {
-            Optional<MasterItem> masterItem = masterItemService.findByItemId(Stream.of(itemId.get(i)).collect(Collectors.joining()));
+            Optional<Inventory> inventory = inventoryService.findByInvId(Stream.of(itemId.get(i)).collect(Collectors.joining()));
             PurchaseRequestCart purchaseCart = new PurchaseRequestCart();
-            purchaseCart.setMasterItem(masterItem.get());
-            purchaseCart.setQuantity(quantity.get(i));
+            purchaseCart.setInventory(inventory.get());
+            purchaseCart.setQtyReq(quantity.get(i));
+            purchaseCart.setQtyRev(0);
             purchaseCart.setItemRemarks(Stream.of(itemRemarks.get(i)).collect(Collectors.joining()));
             purchaseRequestService.addItem(purchaseCart, itemId.get(i));
         }
@@ -145,10 +146,11 @@ public class PurchaseController {
                            @RequestParam("quantity") List<Integer> quantity,
                            @RequestParam("itemRemarks") List<String> itemRemarks) {
         for(int i=0; i < itemId.size(); i++) {
-            Optional<MasterItem> masterItem = masterItemService.findByItemId(Stream.of(itemId.get(i)).collect(Collectors.joining()));
+            Optional<Inventory> inventory = inventoryService.findByInvId(Stream.of(itemId.get(i)).collect(Collectors.joining()));
             PurchaseRequestCart purchaseCart = new PurchaseRequestCart();
-            purchaseCart.setMasterItem(masterItem.get());
-            purchaseCart.setQuantity(quantity.get(i));
+            purchaseCart.setInventory(inventory.get());
+            purchaseCart.setQtyReq(quantity.get(i));
+            purchaseCart.setQtyRev(0);
             purchaseCart.setItemRemarks(Stream.of(itemRemarks.get(i)).collect(Collectors.joining()));
             purchaseRequestService.updateItem(purchaseCart, itemId.get(i));
         }
@@ -160,11 +162,15 @@ public class PurchaseController {
     @RequestMapping(value = "/so/revPR", method = RequestMethod.GET)
     public String revisionPR(@RequestParam("getPR") String prId, Model model){
         PurchaseRequest purchaseRequest = purchaseRequestService.findByPrId(prId);
-        List<PurchaseRequestItem> purchaseRequestItemList = purchaseRequest.getRequestItemList();
-
-
         model.addAttribute("pr", purchaseRequest);
-        model.addAttribute("itemList", purchaseRequestItemList);
+        model.addAttribute("itemList", purchaseRequest.getRequestItemList());
         return "purchasing/pr-revision";
+    }
+
+    @RequestMapping(value = "/so/remove/{itemReqId}/{purchaseReqId}", method = RequestMethod.GET)
+    public String deleteItemReq(@PathVariable("itemReqId") String itemReqId,
+                                @PathVariable("purchaseReqId") String purchaseReqId){
+        purchaseRequestService.deleteItemReq(itemReqId);
+        return "redirect:/app/purchasing/so/revPR?getPR="+purchaseReqId;
     }
 }

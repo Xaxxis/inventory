@@ -8,7 +8,7 @@ import id.xaxxis.inventory.entity.master.user.User;
 import id.xaxxis.inventory.entity.purchasing.pr.PurchaseRequest;
 import id.xaxxis.inventory.entity.purchasing.pr.PurchaseRequestItem;
 import id.xaxxis.inventory.enums.RequestStatus;
-import id.xaxxis.inventory.utils.purchasing.PrLocationSpesification;
+import id.xaxxis.inventory.service.spesification.purchasing.PrLocationSpesification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -21,12 +21,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.transaction.Transactional;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Transactional
 public class PurchaseRequestServiceImpl implements PurchaseRequestService {
 
     private final PurchaseRequestDao purchaseRequestDao;
@@ -60,7 +62,8 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
     public void updateItem(PurchaseRequestCart prCart, String itemId) {
         PurchaseRequestCart pc = prCarts.get(itemId);
         pc.setItemRemarks(prCart.getItemRemarks());
-        pc.setQuantity(prCart.getQuantity());
+        pc.setQtyReq(prCart.getQtyReq());
+        pc.setQtyRev(0);
         prCarts.put(itemId, pc);
 
     }
@@ -85,8 +88,9 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
         for(Map.Entry<String, PurchaseRequestCart> entry : prCarts.entrySet()) {
             final String uuid = UUID.randomUUID().toString().replace("-", "");
             purchaseRequestItem.setRequestItemId(uuid);
-            purchaseRequestItem.setMasterItems(entry.getValue().getMasterItem());
-            purchaseRequestItem.setQuantity(entry.getValue().getQuantity());
+            purchaseRequestItem.setInventory(entry.getValue().getInventory());
+            purchaseRequestItem.setQtyReq(entry.getValue().getQtyReq());
+            purchaseRequestItem.setQtyRev(0);
             purchaseRequestItem.setItemRemarks(entry.getValue().getItemRemarks());
             purchaseRequestItem.setPurchaseRequest(purchaseRequest);
             purchaseRequestItemDao.save(purchaseRequestItem);
@@ -148,5 +152,12 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
         PurchaseRequest purchaseRequest = purchaseRequestDao.findByPurchaseReqId(id);
         List<PurchaseRequestItem> purchaseRequestItemList = purchaseRequest.getRequestItemList();
         return purchaseRequestItemList;
+    }
+
+    @Override
+    public PurchaseRequestItem deleteItemReq(String id) {
+        Optional<PurchaseRequestItem> pri = purchaseRequestItemDao.findById(id);
+        purchaseRequestItemDao.delete(pri.get());
+        return pri.get();
     }
 }

@@ -151,11 +151,11 @@
             <div class="block block-rounded">
                 <div class="block-content">
                     <!-- Products Table -->
-                    <table class="table table-borderless table-striped js-dataTable-full-pagination">
+                    <table id="inv" class="table table-responsive table-borderless table-striped">
                         <thead>
                         <tr>
-                            <th style="width: 100px;">Barcode</th>
-                            <th class="d-none d-sm-table-cell">Nama Barang</th>
+                            <th style="width: 40px;">Barcode</th>
+                            <th style="width: 100px;"class="d-none d-sm-table-cell">Nama Barang</th>
                             <th>Harga Jual</th>
                             <th class="d-none d-md-table-cell">Stok</th>
                             <th class="text-right">Lokasi</th>
@@ -163,17 +163,6 @@
                             <th class="text-right">Tipe</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr th:each="inventory : ${inventoryList}">
-                            <td class="d-none d-sm-table-cell" th:text="${inventory.masterItem.itemBarcode}"></td>
-                            <td class="d-none d-sm-table-cell" th:text="${inventory.masterItem.itemName}"></td>
-                            <td th:text="${inventory.sellPrice != null ? #numbers.formatDecimal(inventory.sellPrice, 0, 'COMMA', 0, 'POINT') : 'Data Belum Ada' }"></td>
-                            <td class="d-none d-md-table-cell text-center" th:text="${inventory.stock}"></td>
-                            <td class="text-right" th:text="${inventory.masterLocation.locationName}"></td>
-                            <td class="text-right" th:text="${inventory.outlet.outletName}"></td>
-                            <td class="text-right" th:text="${inventory.suplier.suplierType.type}"></td>
-                        </tr>
-                        </tbody>
                     </table>
                     <!-- END Products Table -->
                 </div>
@@ -333,16 +322,15 @@
 <script th:src="@{/assets/js/plugins/jquery-validation/jquery.validate.min.js}"></script>
 <script th:src="@{/assets/js/plugins/jquery-validation/additional-methods.min.js}"></script>
 
-<script th:src="@{/assets/js/plugins/datatables/jquery.dataTables.min.js}"></script>
-<script th:src="@{/assets/js/plugins/datatables/dataTables.bootstrap4.min.js}"></script>
-
-<!-- Page JS Code -->
-<script th:src="@{/assets/js/pages/be_tables_datatables.js}"></script>
-
-<!-- Page JS Code -->
+<script th:src="@{/assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}"></script>
+<script th:src="@{/assets/js/plugins/DataTables/datatables.min.js}"></script>
+<script th:src="@{/assets/js/plugins/moment/datetime.js}"></script>
+<script th:src="@{/assets/js/jquery.spring-friendly.js}"></script>
+<script th:src="@{/assets/js/pages/inv-list.js}"></script>
+<!--Page JS Code -->
 <script>
     jQuery(function () {
-        Codebase.helpers(['select2', 'tags-inputs']);
+        Codebase.helpers(['select2', 'tags-inputs', 'datepicker']);
     });
 </script>
 <script type="text/javascript">
