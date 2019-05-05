@@ -1,6 +1,6 @@
 package id.xaxxis.inventory.form;
 
-import id.xaxxis.inventory.entity.purchasing.pr.PurchaseRequestItem;
+import id.xaxxis.inventory.entity.purchasing.request.PurchaseRequestItem;
 import lombok.Data;
 
 import java.io.Serializable;

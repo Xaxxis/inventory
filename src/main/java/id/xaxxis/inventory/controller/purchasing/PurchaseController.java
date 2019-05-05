@@ -3,14 +3,14 @@ package id.xaxxis.inventory.controller.purchasing;
 import id.xaxxis.inventory.dto.purchasing.PurchaseRequestCart;
 import id.xaxxis.inventory.entity.inventory.Inventory;
 import id.xaxxis.inventory.entity.master.suplier.Suplier;
-import id.xaxxis.inventory.entity.purchasing.pr.PurchaseRequest;
-import id.xaxxis.inventory.entity.purchasing.pr.PurchaseRequestItem;
+import id.xaxxis.inventory.entity.purchasing.request.PurchaseRequest;
+import id.xaxxis.inventory.entity.purchasing.request.PurchaseRequestItem;
 import id.xaxxis.inventory.enums.RequestStatus;
 import id.xaxxis.inventory.service.inventory.InventoryService;
 import id.xaxxis.inventory.service.master.item.MasterItemService;
 import id.xaxxis.inventory.service.master.location.MasterLocationService;
 import id.xaxxis.inventory.service.master.suplier.SuplierService;
-import id.xaxxis.inventory.service.purchasing.pr.PurchaseRequestService;
+import id.xaxxis.inventory.service.purchasing.request.PurchaseRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -122,18 +122,6 @@ public class PurchaseController {
         return "redirect:/app/purchasing/request";
     }
 
-//    @GetMapping(value = "/request/updateItem/")
-//    public ModelAndView updateItem(@ModelAttribute ItemReqForm itemReqForm, Model model) {
-//        List<PurchaseRequestCart> purchaseRequestCarts = itemReqForm.getPurchaseRequestCartList();
-//        model.addAttribute("prc", purchaseRequestCarts);
-//        for(PurchaseRequestCart prc:purchaseRequestCarts) {
-//            Optional<MasterItem> masterItem = masterItemService.findByItemId(prc.getMasterItem().getItemId());
-//            prc.setMasterItem(masterItem.get());
-//            purchaseRequestService.addItem(prc, prc.getQuantity());
-//        }
-//        return purchaseRequest();
-//    }
-
     @GetMapping(value = "/request/removeItem/{itemId}")
     public ModelAndView removeItem(@PathVariable("itemId") String itemId) {
         purchaseRequestService.removeItem(itemId);
@@ -162,9 +150,12 @@ public class PurchaseController {
     @RequestMapping(value = "/so/revPR", method = RequestMethod.GET)
     public String revisionPR(@RequestParam("getPR") String prId, Model model){
         PurchaseRequest purchaseRequest = purchaseRequestService.findByPrId(prId);
-        model.addAttribute("pr", purchaseRequest);
-        model.addAttribute("itemList", purchaseRequest.getRequestItemList());
-        return "purchasing/pr-revision";
+        if(!purchaseRequest.getRequestStatus().equals(RequestStatus.REVISI)){
+            model.addAttribute("pr", purchaseRequest);
+            model.addAttribute("itemList", purchaseRequest.getRequestItemList());
+            return "purchasing/pr-revision";
+        }
+        return "redirect:/app/purchasing/request/getPR?number="+purchaseRequest.getPurchaseRequestNumber();
     }
 
     @RequestMapping(value = "/so/remove/{itemReqId}/{purchaseReqId}", method = RequestMethod.GET)
@@ -172,5 +163,27 @@ public class PurchaseController {
                                 @PathVariable("purchaseReqId") String purchaseReqId){
         purchaseRequestService.deleteItemReq(itemReqId);
         return "redirect:/app/purchasing/so/revPR?getPR="+purchaseReqId;
+    }
+
+    @RequestMapping(value = "/order/submit", method = RequestMethod.GET)
+    public String createPo(@RequestParam("id") String id,
+                           @RequestParam("itemId") List<String> itemId,
+                           @RequestParam("revQty") List<Integer> revQty,
+                           @RequestParam("revRemarks") List<String> revRemarks){
+        PurchaseRequest purchaseRequest = purchaseRequestService.findByPrId(id);
+
+        if(!purchaseRequest.getRequestStatus().equals(RequestStatus.REVISI)){
+            purchaseRequest.setRequestStatus(RequestStatus.REVISI);
+
+            purchaseRequestService.savePr(purchaseRequest);
+            for(int i=0; i < itemId.size(); i++){
+                PurchaseRequestItem purchaseRequestItem = purchaseRequestService.findByitemReqId(itemId.get(i));
+                purchaseRequestItem.setQtyRev(revQty.get(i));
+                purchaseRequestItem.setItemRemarks(revRemarks.get(i));
+                purchaseRequestService.savePrItem(purchaseRequestItem);
+        }
+            return "redirect:/app/purchasing/request/list";
+        }
+        return "redirect:/app/purchasing/request/list";
     }
 }

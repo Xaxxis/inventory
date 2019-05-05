@@ -1,12 +1,12 @@
-package id.xaxxis.inventory.service.purchasing.pr;
+package id.xaxxis.inventory.service.purchasing.request;
 
-import id.xaxxis.inventory.dao.purchasing.PurchaseRequestDao;
-import id.xaxxis.inventory.dao.purchasing.PurchaseRequestItemDao;
+import id.xaxxis.inventory.dao.purchasing.request.PurchaseRequestDao;
+import id.xaxxis.inventory.dao.purchasing.request.PurchaseRequestItemDao;
 import id.xaxxis.inventory.dto.purchasing.PurchaseRequestCart;
 import id.xaxxis.inventory.entity.master.location.MasterLocation;
 import id.xaxxis.inventory.entity.master.user.User;
-import id.xaxxis.inventory.entity.purchasing.pr.PurchaseRequest;
-import id.xaxxis.inventory.entity.purchasing.pr.PurchaseRequestItem;
+import id.xaxxis.inventory.entity.purchasing.request.PurchaseRequest;
+import id.xaxxis.inventory.entity.purchasing.request.PurchaseRequestItem;
 import id.xaxxis.inventory.enums.RequestStatus;
 import id.xaxxis.inventory.service.spesification.purchasing.PrLocationSpesification;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -148,6 +148,11 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
     }
 
     @Override
+    public PurchaseRequest savePr(PurchaseRequest purchaseRequest) {
+        return purchaseRequestDao.save(purchaseRequest);
+    }
+
+    @Override
     public List<PurchaseRequestItem> findAllItemReq(String id) {
         PurchaseRequest purchaseRequest = purchaseRequestDao.findByPurchaseReqId(id);
         List<PurchaseRequestItem> purchaseRequestItemList = purchaseRequest.getRequestItemList();
@@ -159,5 +164,15 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
         Optional<PurchaseRequestItem> pri = purchaseRequestItemDao.findById(id);
         purchaseRequestItemDao.delete(pri.get());
         return pri.get();
+    }
+
+    @Override
+    public PurchaseRequestItem findByitemReqId(String id) {
+        return purchaseRequestItemDao.findByRequestItemId(id);
+    }
+
+    @Override
+    public PurchaseRequestItem savePrItem(PurchaseRequestItem purchaseRequestItem) {
+        return purchaseRequestItemDao.save(purchaseRequestItem);
     }
 }

@@ -1,7 +1,7 @@
 package id.xaxxis.inventory.controller.api;
 
-import id.xaxxis.inventory.entity.purchasing.pr.PurchaseRequest;
-import id.xaxxis.inventory.service.purchasing.pr.PurchaseRequestService;
+import id.xaxxis.inventory.entity.purchasing.request.PurchaseRequest;
+import id.xaxxis.inventory.service.purchasing.request.PurchaseRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;

@@ -1,6 +1,6 @@
-package id.xaxxis.inventory.dao.purchasing;
+package id.xaxxis.inventory.dao.purchasing.request;
 
-import id.xaxxis.inventory.entity.purchasing.pr.PurchaseRequestItem;
+import id.xaxxis.inventory.entity.purchasing.request.PurchaseRequestItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +13,8 @@ public interface PurchaseRequestItemDao extends JpaRepository<PurchaseRequestIte
     PurchaseRequestItem deletePurchaseRequestItemByRequestItemId(String itemId);
 
     void deletePurchaseRequestItemsByRequestItemId(String id);
+
+    PurchaseRequestItem findByRequestItemId(String id);
 
 
 }

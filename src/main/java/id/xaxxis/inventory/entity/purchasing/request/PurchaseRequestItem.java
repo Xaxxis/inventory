@@ -1,4 +1,4 @@
-package id.xaxxis.inventory.entity.purchasing.pr;
+package id.xaxxis.inventory.entity.purchasing.request;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;

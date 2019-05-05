@@ -1,6 +1,6 @@
-package id.xaxxis.inventory.dao.purchasing;
+package id.xaxxis.inventory.dao.purchasing.request;
 
-import id.xaxxis.inventory.entity.purchasing.pr.PurchaseRequest;
+import id.xaxxis.inventory.entity.purchasing.request.PurchaseRequest;
 import id.xaxxis.inventory.enums.RequestStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

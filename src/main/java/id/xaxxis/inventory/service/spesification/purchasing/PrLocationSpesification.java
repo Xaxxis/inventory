@@ -1,7 +1,7 @@
 package id.xaxxis.inventory.service.spesification.purchasing;
 
 import id.xaxxis.inventory.entity.master.user.User;
-import id.xaxxis.inventory.entity.purchasing.pr.PurchaseRequest;
+import id.xaxxis.inventory.entity.purchasing.request.PurchaseRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

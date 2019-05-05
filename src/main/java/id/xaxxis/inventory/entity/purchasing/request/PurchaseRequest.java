@@ -1,4 +1,4 @@
-package id.xaxxis.inventory.entity.purchasing.pr;
+package id.xaxxis.inventory.entity.purchasing.request;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -61,5 +61,10 @@ public class PurchaseRequest extends BaseEntity {
     @Version
     @Column(name = "version")
     private Integer version;
+
+    @Transient
+    public Integer qtyOfItem(){
+        return requestItemList.size();
+    }
 
 }

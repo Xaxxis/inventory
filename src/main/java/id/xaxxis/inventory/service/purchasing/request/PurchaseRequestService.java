@@ -1,8 +1,8 @@
-package id.xaxxis.inventory.service.purchasing.pr;
+package id.xaxxis.inventory.service.purchasing.request;
 
 import id.xaxxis.inventory.dto.purchasing.PurchaseRequestCart;
-import id.xaxxis.inventory.entity.purchasing.pr.PurchaseRequest;
-import id.xaxxis.inventory.entity.purchasing.pr.PurchaseRequestItem;
+import id.xaxxis.inventory.entity.purchasing.request.PurchaseRequest;
+import id.xaxxis.inventory.entity.purchasing.request.PurchaseRequestItem;
 import id.xaxxis.inventory.enums.RequestStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,8 +36,15 @@ public interface PurchaseRequestService {
 
     PurchaseRequest findByPrId(String prId);
 
+    PurchaseRequest savePr(PurchaseRequest purchaseRequest);
+
     List<PurchaseRequestItem> findAllItemReq(String id);
 
     PurchaseRequestItem deleteItemReq(String id);
+
+    PurchaseRequestItem findByitemReqId(String id);
+
+    PurchaseRequestItem savePrItem(PurchaseRequestItem purchaseRequestItem);
+
 
 }
