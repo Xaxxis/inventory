@@ -30,7 +30,7 @@ public class PurchaseOrder extends BaseEntity {
     @Column(name = "po_number", length = 30, nullable = false, updatable = false)
     private String poNumber;
 
-    @Column(name = "pr_number", length = 30)
+    @Column(name = "pr_number", length = 30, nullable = false, updatable = false, unique = true)
     private String prNumber;
 
     @JsonIgnore
@@ -39,7 +39,7 @@ public class PurchaseOrder extends BaseEntity {
     private User user;
 
     @JsonManagedReference
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", })
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "outlet_id")
     private Outlet outlet;
@@ -61,11 +61,12 @@ public class PurchaseOrder extends BaseEntity {
     @Column(name = "remarks", length = 150)
     private String remarks;
 
-
     @Transient
-    public BigDecimal calcGrandTotal(){
+    private Integer totalItems;
 
-        return null;
+    @PostLoad
+    public void calcTotalItems(){
+        this.totalItems = purchaseOrderDetails.size();
     }
 
 }

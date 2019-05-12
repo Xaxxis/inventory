@@ -1,5 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       layout:decorate="layout">
 <head th:replace="layout :: common-header">
     <title>Update Hak Akses</title>
@@ -85,6 +86,24 @@
                                         <option th:each="location : ${allLocation}"
                                                 th:value="${location.locationId}"
                                                 th:text="${location.locationName}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label" for="masterLocation">Outlet <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-lg-8">
+                                    <select th:required="required" data-parsley-errors-messages-disabled="true"
+                                            data-parsley-required-message="Anda perlu mengisi outlet kerja baru!"
+                                            class="js-select2 form-control" id="outlet"  name="outelet"
+                                            data-placeholder="Pilih lokasi kerja" th:field="*{outlet}">
+                                        <!-- Required for data-placeholder attribute to work with Select2 plugin -->
+                                        <!--<option th:value="${user.masterLocation.locationId}" th:text="${user.masterLocation.locationName}"-->
+                                        <!--th:selected="true"></option>-->
+                                        <option th:each="outlet : ${allOutlet}"
+                                                th:value="${outlet.outletId}"
+                                                th:text="${outlet.outletName}">
                                         </option>
                                     </select>
                                 </div>

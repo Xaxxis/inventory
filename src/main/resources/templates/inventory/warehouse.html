@@ -1,5 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       layout:decorate="layout">
 <head th:replace="layout :: common-header">
     <title>E-Customer Register</title>
@@ -24,8 +25,8 @@
         </div>
         <div class="content">
             <!-- Overview -->
-            <h2 class="content-heading">Overview</h2>
-            <div class="row gutters-tiny">
+            <h2 sec:authorize="hasAnyRole('ROLE_GUDANG', 'ROLE_ADMIN')" class="content-heading">Overview</h2>
+            <div sec:authorize="hasAnyRole('ROLE_GUDANG', 'ROLE_ADMIN')" class="row gutters-tiny">
                 <!-- All Products -->
                 <div class="col-md-6 col-xl-3">
                     <a class="block block-rounded block-link-shadow" href="javascript:void(0)">

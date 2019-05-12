@@ -1,10 +1,13 @@
 package id.xaxxis.inventory.service.master.user;
 
 import id.xaxxis.inventory.dao.master.user.UserDao;
+import id.xaxxis.inventory.entity.master.location.MasterLocation;
+import id.xaxxis.inventory.entity.master.location.Outlet;
 import id.xaxxis.inventory.entity.master.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -66,6 +69,17 @@ public class UserServiceImpl implements UserService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean checkOutletEqualLocation(Outlet outlet, MasterLocation masterLocation) {
+        return outlet.getMasterLocation().equals(masterLocation);
+    }
+
+    @Override
+    public boolean hasRole(String roles) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return user.getRoles().toString().contains(roles);
     }
 
 

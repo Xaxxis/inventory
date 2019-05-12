@@ -12,4 +12,6 @@ public interface OutletDao extends JpaRepository<Outlet, String> {
     List<Outlet> findAllByOrderByOutletId();
     Outlet findByOutletId(String outletId);
 
+    @Override
+    long count();
 }

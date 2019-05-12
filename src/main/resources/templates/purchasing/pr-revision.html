@@ -1,5 +1,5 @@
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       layout:decorate="layout">
 <head th:replace="layout :: common-header">
     <title>E-Customer Register</title>
@@ -25,7 +25,7 @@
         <!-- Page Content -->
         <div class="content">
             <!-- Page Content -->
-            <form th:action="@{'/app/purchasing/order/submit'}">
+            <form th:action="@{'/app/so/order/submit'}">
                 <div class="content">
                 <!-- Invoice -->
                 <h2 class="content-heading d-print-none">
@@ -48,9 +48,9 @@
                     <div class="block-content">
                         <div class="row my-20">
                             <div class="col-6">
-                                <p class="h3"><a th:text="${pr.masterLocation.locationName}"></a></p>
+                                <p class="h3"><a th:text="${pr.outlet.masterLocation.locationName}"></a></p>
                                 <address>
-                                    <a th:text="${pr.masterLocation.address}"></a><br>
+                                    <a th:text="${pr.outlet.masterLocation.address}"></a><br>
                                     <a class="font-w600 mb-5 text-primary" th:text="${pr.user.firstName}"></a> <a class="font-w600 mb-5 text-primary" th:text="${pr.user.lastName}"></a><br>
                                     <a th:text="${pr.user.email}"></a>
                                 </address>
@@ -66,34 +66,34 @@
                                     </blockquote>
                                 </address>
                                 <div th:switch="${pr.requestStatus.name()}">
-                                    <span th:case="'TERTUNDA'" class="badge badge-warning"><i class="fa fa-exclamation-circle mr-5"></i>TERTUNDA</span>
-                                    <span th:case="'DIPROSES'" class="badge badge-info"><i class="fa fa-info-circle mr-5"></i>DIPROSES</span>
+                                    <span th:case="'TERTUNDA'" class="badge badge-secondary"><i class="fa fa-clock-o mr-5"></i>TERTUNDA</span>
+                                    <span th:case="'DIPROSES'" class="badge badge-info"><i class="fa fa-cogs mr-5"></i>DIPROSES</span>
                                     <span th:case="'SELESAI'" class="badge badge-success"><i class="fa fa-check mr-5"></i>SELESAI</span>
-                                    <span th:case="'DIBATALKAN'" class="badge badge-danger"><i class="fa fa-times-circle mr-5"></i>DIBATALKAN</span>
-                                    <span th:case="'REVISI'" class="badge badge-secondary"><i class="fa fa-home mr-5"></i>REVISI</span>
+                                    <span th:case="'DIBATALKAN'" class="badge badge-danger"><i class="fa fa-ban mr-5"></i>DIBATALKAN</span>
+                                    <span th:case="'REVISI'" class="badge badge-warning"><i class="fa fa-calculator mr-5"></i>REVISI</span>
                                 </div>
                             </div>
                         </div>
+
                         <div class="block">
                             <div class="table-responsive">
-                                <table id="detTbl" class="table table-responsiv table-borderless text-center mb-0">
-                                    <thead class="thead-dark">
+                                <table id="detTbl" class="table table-responsive table-borderless text-center mb-0">
+                                    <thead class="bg-gd-lake">
                                     <tr>
                                         <th class="py-20" style="width: 150px;"></th>
                                         <th class="text-center py-20">Permintaan</th>
                                         <th class="text-center py-20">Unit</th>
-                                        <th class="text-center py-20">Stok <a th:text="${pr.masterLocation.locationName}"></a></th>
+                                        <th class="text-center py-20">Sisa Stok</a></th>
                                         <th class="text-center py-20">SO</th>
                                         <th class="text-center py-20">Catatan</th>
                                         <th class="text-center py-20">Outlet</th>
-                                        <th>aksi</th>
+                                        <th class="d-print-none py-20">aksi</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <form method="get" th:action="@{'/app/purchasing/order/submit'}">
                                         <tr th:each="itemReq, iterator : ${itemList}">
                                         <td class="font-w600 text-right"><input type="hidden" name="itemId" th:value="${itemReq.requestItemId}"/><a th:text="${itemReq.inventory.masterItem.itemName}"></a></td>
-                                        <td><a th:text="${itemReq.qtyReq}"></a></td>
+                                        <td><span class="badge badge-pill badge-primary"><a th:text="${itemReq.qtyReq}"></a></span></td>
                                         <td><a th:text="${itemReq.inventory.masterItem.unitItem.unitName}"></a></td>
                                         <td><a th:text="${itemReq.inventory.stock}"></a></td>
                                         <td>
@@ -103,30 +103,51 @@
                                         </td>
                                         <td><input name="revRemarks" th:value="${itemReq.itemRemarks}"/></td>
                                         <td><a th:text="${itemReq.inventory.outlet.outletName}"></a></td>
-                                            <td class="text-center">
+                                            <td class="text-center d-print-none">
                                                 <div class="btn-group">
-                                                    <a type="button" th:href="@{'/app/purchasing/so/remove/'+${itemReq.requestItemId}+'/'+${itemReq.purchaseRequest.purchaseReqId}}" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Hapus">
+                                                    <a type="button" th:href="@{'/app/so/prItem/remove/'+${itemReq.requestItemId}+'/'+${itemReq.purchaseRequest.purchaseReqId}}" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Hapus">
                                                         <i class="fa fa-times"></i>
                                                     </a>
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr class="bg-body-light">
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td><button type="submit" class="btn btn-hero btn-sm btn-rounded btn-noborder btn-success">Submit</button></td>
+                                        <tr class="bg-body-dark">
                                             <td></td>
-                                    </tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
+                        <h3 class="block-title"><b> Ver.<a th:text="${pr.version}"></a></b><small> revisi terakhir oleh <a th:text="${pr.lastModifiedBy}"></a> pada <a th:text="${pr.lastModifiedDate != null ? #dates.format(pr.lastModifiedDate, 'HH:mm:ss dd-MM-yyyy') : ''}"></a></small></h3>
                     </div>
                 </div>
+                    <div class="form-group col row d-print-none">
+                        <div class="md-10">
+                            <input type="submit" name="action" value="Save" class="btn btn-hero btn-sm btn-rounded btn-noborder btn-success"/>
+                                <!--<i class="fa fa-save mr-5"></i> Simpan</input>-->
+                        </div>
+                        <div class="md-10" sec:authorize="hasRole('ROLE_APPROVAL')">
+                            <input type="submit" name="action" value="Submit" class="btn btn-hero btn-sm btn-rounded btn-noborder btn-warning"/>
+                                <!--<i class="fa fa-upload mr-5"></i> Submit</input>-->
+                        </div>
+                        <div class="md-10">
+                            <a onclick="goBack()" class="btn btn-hero btn-sm btn-rounded btn-noborder btn-alt-secondary">
+                                <i class="fa fa-close mr-5"></i> Batal
+                            </a>
+                            <script>
+                                function goBack() {
+                                    window.history.back();
+                                }
+                            </script>
+                        </div>
+                    </div>
             </div>
             </form>
         </div>

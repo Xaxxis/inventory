@@ -2,18 +2,22 @@ package id.xaxxis.inventory.service.purchasing.order;
 
 import id.xaxxis.inventory.entity.purchasing.order.PurchaseOrder;
 import id.xaxxis.inventory.entity.purchasing.order.PurchaseOrderDetail;
-import id.xaxxis.inventory.entity.purchasing.request.PurchaseRequest;
-import id.xaxxis.inventory.entity.purchasing.request.PurchaseRequestItem;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+
+import java.util.Optional;
 
 public interface PurchaseOrderService {
 
     PurchaseOrder savePurchaseOrder(PurchaseOrder purchaseOrder);
     PurchaseOrderDetail savePurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail);
 
+    DataTablesOutput<PurchaseOrder> findAll(DataTablesInput input);
 
-    void createPO(PurchaseRequest purchaseRequest, PurchaseRequestItem purchaseRequestItem);
+    void createPO(String id);
 
-    String generatePONumber();
+    String generatePONumber(String prNumber);
 
+    Optional<PurchaseOrder> findById(String id);
 
 }

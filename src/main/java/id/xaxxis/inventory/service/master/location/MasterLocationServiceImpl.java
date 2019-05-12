@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -56,6 +58,7 @@ public class MasterLocationServiceImpl implements MasterLocationService {
 
     @Override
     public Outlet saveOutlet(Outlet outlet) {
+        outlet.setOutletId(gengerateIdOutlet());
         return outletDao.save(outlet);
     }
 
@@ -77,5 +80,20 @@ public class MasterLocationServiceImpl implements MasterLocationService {
             return outletDao.findAllByOrderByOutletId();
         }
         return outletDao.findAllByMasterLocation_LocationId(locationID);
+    }
+
+    @Override
+    public String gengerateIdOutlet() {
+        Long outlet = outletDao.count();
+        String prefix = "OUTID00";
+        Date date = Calendar.getInstance().getTime();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int seconds = calendar.get(Calendar.SECOND);
+        if(outlet!=null){
+            int id = outlet.intValue() + 1;
+            return prefix + id + seconds;
+        }
+        return prefix + 1 + seconds;
     }
 }

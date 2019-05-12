@@ -37,6 +37,7 @@ public class MultipleSecurityConfig {
         return new BCryptPasswordEncoder(12, new SecureRandom(SALT.getBytes()));
     }
 
+
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userSecurityService).passwordEncoder(passwordEncoder());
@@ -48,15 +49,7 @@ public class MultipleSecurityConfig {
             "/",
             "/error/**/*",
             "/login",
-            "/cek-account",
-            "/front-register/**",
             "/v3/getaccount/**/*",
-            "/app/user/**/*",
-            "/dashboards",
-            "/v3/dashboard/countuser"
-            //        "/api/refund/**/*/*",
-            //        "/app/user/daftar",
-            //        "/app/user/register"
     };
 
     @Configuration
@@ -101,6 +94,14 @@ public class MultipleSecurityConfig {
                     .authorizeRequests()
                     .antMatchers(PUBLIC_MATCHERS).permitAll()
                     .antMatchers("/app/user/change-password/**").access("hasAnyRole('ADMIN','USER')")
+                    .antMatchers("/app/user/profile").access("hasAnyRole('ADMIN','USER')")
+                    .antMatchers("/app/inventory/list").access("permitAll()")
+                    .antMatchers("/app/inv/warehouse").access("permitAll()")
+                    .antMatchers("/app/inv/**").access("hasAnyRole('ADMIN','GUDANG')")
+                    .antMatchers("/app/purchasing/request/**").access("hasAnyRole('ADMIN','GUDANG','SO')")
+                    .antMatchers("/app/purchasing/**").access("hasAnyRole('ADMIN','GUDANG','PURCHASING')")
+                    .antMatchers("/app/so/**").access("hasAnyRole('ADMIN','SO')")
+                    .antMatchers("/app/**").access("hasRole('ADMIN')")
                     .anyRequest().authenticated()
                     .and()
                     .formLogin().loginPage("/login").failureUrl("/login?error").permitAll()

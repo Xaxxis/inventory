@@ -33,7 +33,7 @@ var table = $('table#inv').DataTable({
             render: function (data) { return data ? data : '-'; }
         },
         {
-            data: 'suplier.suplierName',
+            data: 'suplier.suplierType.type',
         },
     ]
 })

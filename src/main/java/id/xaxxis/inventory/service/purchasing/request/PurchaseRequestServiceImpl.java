@@ -3,7 +3,7 @@ package id.xaxxis.inventory.service.purchasing.request;
 import id.xaxxis.inventory.dao.purchasing.request.PurchaseRequestDao;
 import id.xaxxis.inventory.dao.purchasing.request.PurchaseRequestItemDao;
 import id.xaxxis.inventory.dto.purchasing.PurchaseRequestCart;
-import id.xaxxis.inventory.entity.master.location.MasterLocation;
+import id.xaxxis.inventory.entity.master.location.Outlet;
 import id.xaxxis.inventory.entity.master.user.User;
 import id.xaxxis.inventory.entity.purchasing.request.PurchaseRequest;
 import id.xaxxis.inventory.entity.purchasing.request.PurchaseRequestItem;
@@ -77,10 +77,10 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
     public void createPurchaseRequest(PurchaseRequest purchaseRequest, PurchaseRequestItem purchaseRequestItem) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
-        MasterLocation masterLocation = user.getMasterLocation();
+        Outlet outlet = user.getOutlet();
 
         purchaseRequest.setUser(user);
-        purchaseRequest.setMasterLocation(masterLocation);
+        purchaseRequest.setOutlet(outlet);
         purchaseRequest.setRequestStatus(RequestStatus.TERTUNDA);
         purchaseRequest.setPurchaseRequestNumber(generatePrNumber());
         purchaseRequestDao.save(purchaseRequest);
@@ -149,6 +149,8 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
 
     @Override
     public PurchaseRequest savePr(PurchaseRequest purchaseRequest) {
+        purchaseRequest.setRequestStatus(RequestStatus.REVISI);
+        purchaseRequest.setVersion(purchaseRequest.getVersion()+1);
         return purchaseRequestDao.save(purchaseRequest);
     }
 
@@ -174,5 +176,10 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
     @Override
     public PurchaseRequestItem savePrItem(PurchaseRequestItem purchaseRequestItem) {
         return purchaseRequestItemDao.save(purchaseRequestItem);
+    }
+
+    @Override
+    public boolean checkReStatus(RequestStatus requestStatus) {
+        return requestStatus.getValue() <= 1;
     }
 }

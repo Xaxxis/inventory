@@ -5,6 +5,7 @@ import id.xaxxis.inventory.service.master.location.MasterLocationService;
 import id.xaxxis.inventory.service.master.user.RoleService;
 import id.xaxxis.inventory.service.master.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,7 +32,7 @@ public class UserController {
         this.passwordEncoder = passwordEncoder;
     }
 
-
+    @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String registerUser(Model model) {
         model.addAttribute("activeUser", "active");
@@ -42,6 +43,7 @@ public class UserController {
         return "admin/user/user-signup";
     }
 
+    @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String createUser(@ModelAttribute("user")User user, Model model) {
     //    model.addAttribute("user",user);
@@ -51,6 +53,7 @@ public class UserController {
         return "redirect:/app/user/register";
     }
 
+    @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String listUser(Model model) {
         model.addAttribute("openUser", "open");
@@ -59,6 +62,7 @@ public class UserController {
         return "admin/user/user-list";
     }
 
+    @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String editUser(Model model, @PathVariable String id) {
         User user = userService.findByUserId(id);
@@ -67,20 +71,26 @@ public class UserController {
         model.addAttribute("user", user);
         model.addAttribute("allRole", this.roleService.findAll());
         model.addAttribute("allLocation", this.masterLocationService.findAllLocation());
+        model.addAttribute("allOutlet", masterLocationService.findAllOutlet());
         return "admin/user/user-update";
     }
 
+    @Secured("ROLE_USER")
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public String updateUser(@ModelAttribute("user") User newUser) {
         User user = userService.findByUserId(newUser.getUserId());
-        user.setRoles(newUser.getRoles());
-        user.setMasterLocation(newUser.getMasterLocation());
-        user.setOutlet(newUser.getOutlet());
-        user.setEnabled(newUser.isEnabled());
-        userService.saveUser(user);
-        return "redirect:/app/user/list";
+        if(userService.checkOutletEqualLocation(newUser.getOutlet(), newUser.getMasterLocation())){
+            user.setRoles(newUser.getRoles());
+            user.setMasterLocation(newUser.getMasterLocation());
+            user.setOutlet(newUser.getOutlet());
+            user.setEnabled(newUser.isEnabled());
+            userService.saveUser(user);
+            return "redirect:/app/user/list";
+        }
+        return "redirect:/app/user/edit/"+newUser.getUserId();
     }
 
+    @Secured("ROLE_USER")
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public String profileUser(Model model, Principal principal) {
         User user = userService.findByUsername(principal.getName());
@@ -88,6 +98,7 @@ public class UserController {
         return "admin/user/user-profile";
     }
 
+    @Secured("ROLE_USER")
     @RequestMapping(value = "/change-password", method = RequestMethod.POST)
     public String changePassword(Principal principal, @RequestParam("oldPassword") String oldPassword,
                                  @RequestParam("password") String password) {

@@ -3,6 +3,7 @@ package id.xaxxis.inventory.controller.purchasing;
 import id.xaxxis.inventory.dto.purchasing.PurchaseRequestCart;
 import id.xaxxis.inventory.entity.inventory.Inventory;
 import id.xaxxis.inventory.entity.master.suplier.Suplier;
+import id.xaxxis.inventory.entity.purchasing.order.PurchaseOrder;
 import id.xaxxis.inventory.entity.purchasing.request.PurchaseRequest;
 import id.xaxxis.inventory.entity.purchasing.request.PurchaseRequestItem;
 import id.xaxxis.inventory.enums.RequestStatus;
@@ -10,8 +11,10 @@ import id.xaxxis.inventory.service.inventory.InventoryService;
 import id.xaxxis.inventory.service.master.item.MasterItemService;
 import id.xaxxis.inventory.service.master.location.MasterLocationService;
 import id.xaxxis.inventory.service.master.suplier.SuplierService;
+import id.xaxxis.inventory.service.purchasing.order.PurchaseOrderService;
 import id.xaxxis.inventory.service.purchasing.request.PurchaseRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -31,17 +34,21 @@ public class PurchaseController {
     private final MasterItemService masterItemService;
     private final PurchaseRequestService purchaseRequestService;
     private final InventoryService inventoryService;
+    private final PurchaseOrderService purchaseOrderService;
+
     @Autowired
     public PurchaseController(SuplierService suplierService,
                               MasterLocationService masterLocationService,
                               MasterItemService masterItemService,
                               PurchaseRequestService purchaseRequestService,
-                              InventoryService inventoryService) {
+                              InventoryService inventoryService,
+                              PurchaseOrderService purchaseOrderService) {
         this.suplierService = suplierService;
         this.masterLocationService = masterLocationService;
         this.masterItemService = masterItemService;
         this.purchaseRequestService = purchaseRequestService;
         this.inventoryService = inventoryService;
+        this.purchaseOrderService = purchaseOrderService;
     }
 
     @RequestMapping(value = "/suplier", method = RequestMethod.GET)
@@ -85,6 +92,7 @@ public class PurchaseController {
         return mv;
     }
 
+    @Secured("ROLE_SO")
     @RequestMapping(value = "/request/list", method = RequestMethod.GET)
     public String prList(Model model) {
         model.addAttribute("locations", masterLocationService.findAll());
@@ -147,17 +155,6 @@ public class PurchaseController {
         return "redirect:/app/purchasing/request";
     }
 
-    @RequestMapping(value = "/so/revPR", method = RequestMethod.GET)
-    public String revisionPR(@RequestParam("getPR") String prId, Model model){
-        PurchaseRequest purchaseRequest = purchaseRequestService.findByPrId(prId);
-        if(!purchaseRequest.getRequestStatus().equals(RequestStatus.REVISI)){
-            model.addAttribute("pr", purchaseRequest);
-            model.addAttribute("itemList", purchaseRequest.getRequestItemList());
-            return "purchasing/pr-revision";
-        }
-        return "redirect:/app/purchasing/request/getPR?number="+purchaseRequest.getPurchaseRequestNumber();
-    }
-
     @RequestMapping(value = "/so/remove/{itemReqId}/{purchaseReqId}", method = RequestMethod.GET)
     public String deleteItemReq(@PathVariable("itemReqId") String itemReqId,
                                 @PathVariable("purchaseReqId") String purchaseReqId){
@@ -165,25 +162,22 @@ public class PurchaseController {
         return "redirect:/app/purchasing/so/revPR?getPR="+purchaseReqId;
     }
 
-    @RequestMapping(value = "/order/submit", method = RequestMethod.GET)
-    public String createPo(@RequestParam("id") String id,
-                           @RequestParam("itemId") List<String> itemId,
-                           @RequestParam("revQty") List<Integer> revQty,
-                           @RequestParam("revRemarks") List<String> revRemarks){
-        PurchaseRequest purchaseRequest = purchaseRequestService.findByPrId(id);
+    @RequestMapping(value = "/order/list", method = RequestMethod.GET)
+    public ModelAndView poList(){
+        ModelAndView mv = new ModelAndView("purchasing/po-list");
+        mv.addObject("locations",masterLocationService.findAllLocation());
+        mv.addObject("status", RequestStatus.values());
+        mv.addObject("poListActive", "active");
+        mv.addObject("purchaseOpen", "open");
+        return mv;
+    }
 
-        if(!purchaseRequest.getRequestStatus().equals(RequestStatus.REVISI)){
-            purchaseRequest.setRequestStatus(RequestStatus.REVISI);
-
-            purchaseRequestService.savePr(purchaseRequest);
-            for(int i=0; i < itemId.size(); i++){
-                PurchaseRequestItem purchaseRequestItem = purchaseRequestService.findByitemReqId(itemId.get(i));
-                purchaseRequestItem.setQtyRev(revQty.get(i));
-                purchaseRequestItem.setItemRemarks(revRemarks.get(i));
-                purchaseRequestService.savePrItem(purchaseRequestItem);
-        }
-            return "redirect:/app/purchasing/request/list";
-        }
-        return "redirect:/app/purchasing/request/list";
+    @RequestMapping(value = "/order/getPo", method = RequestMethod.GET)
+    public ModelAndView getPo(@RequestParam("poId") String poId){
+        ModelAndView mv = new ModelAndView("purchasing/po-detail");
+        Optional<PurchaseOrder> po = purchaseOrderService.findById(poId);
+        mv.addObject("po", po.get());
+        mv.addObject("itemList", po.get().getPurchaseOrderDetails());
+        return mv;
     }
 }

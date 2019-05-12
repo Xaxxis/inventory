@@ -1,5 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       layout:decorate="layout">
 <head th:replace="layout :: common-header">
     <title>E-Customer Register</title>
@@ -82,7 +83,7 @@
                                         <label class="small">Diminta oleh</label>
                                         <div class="font-size-lg text-black mb-5"><a th:text="${#request.userPrincipal.principal.firstName}+' '+${#request.userPrincipal.principal.lastName}"></a></div><input name="user" th:hidden="true" th:value="${#request.userPrincipal.principal.masterLocation}"/>
                                         <address>
-                                            <a th:text="${#request.userPrincipal.principal.masterLocation.locationName}"></a><br><input name="masterLocation" th:hidden="true" th:value="${#request.userPrincipal.principal.masterLocation.locationId}"/>
+                                            <a th:text="${#request.userPrincipal.principal.masterLocation.locationName}"></a> <a th:text="${#request.userPrincipal.principal.outlet.outletName}"></a><br><input name="outlet" th:hidden="true" th:value="${#request.userPrincipal.principal.outlet.outletId}"/>
                                             <i class="fa fa-phone mr-5"></i><br>
                                             <i class="fa fa-envelope-o mr-5"></i> <a th:text="${#request.userPrincipal.principal.email}" href="javascript:void(0)"></a>
                                         </address>

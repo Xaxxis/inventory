@@ -20,6 +20,9 @@ public class Role {
     @Column(name = "TYPE", length = 15, unique = true, nullable = false)
     private String type;
 
+    @Column(name = "desc", length = 30)
+    private String description;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

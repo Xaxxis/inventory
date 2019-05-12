@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" xmlns:sec="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       layout:decorate="layout">
 <head th:replace="layout :: common-header">
     <title>Daftar Pengguna Aplikasi</title>
@@ -25,7 +25,8 @@
                     <h1 class="h3 text-white font-w700 mb-10">
                         <span th:text="${#request.userPrincipal.principal.firstName}"></span> <span th:text="${#request.userPrincipal.principal.lastName}"></span><i class="fa fa-star text-warning"></i>
                     </h1>
-                    <h2 class="h5 text-white-op">Lokasi Kerja: <span th:text="${#request.userPrincipal.principal.masterLocation.locationName}"></span></h2>
+                    <h6 class="h6 text-white-op">Lokasi Kerja : <span th:text="${#request.userPrincipal.principal.masterLocation.locationName}"></span></h6>
+                    <h7 class="h7 text-white-op">Outlet : <span th:text="${#request.userPrincipal.principal.outlet.outletName}"></span></h7>
                 </div>
                 </div>
             </div>

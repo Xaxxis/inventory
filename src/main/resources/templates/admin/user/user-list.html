@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" xmlns:sec="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       layout:decorate="layout">
 <head th:replace="layout :: common-header">
     <title>Daftar Pengguna Aplikasi</title>
@@ -49,13 +49,13 @@
                                       th:text="${user.enabled} ? 'Aktif' : 'Tidak Aktif'"></span>
                             </td>
                             <td class="text-center">
+
                                 <!--<a sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_EMONEY')"-->
                                 <!--th:href="@{'/app/user/user-detail/' + ${user.id}}"-->
                                 <!--data-toggle="tooltip" title="Lihat Detail User">-->
                                 <!--<i class="si si-user"></i>-->
                                 <!--</a>  -->
-                                <a sec:authorize="hasAnyRole('ROLE_EMONEY')"
-                                   th:href="@{'/app/user/edit/' + ${user.userId}}"
+                                <a th:href="@{'/app/user/edit/' + ${user.userId}}"
                                    data-toggle="tooltip" title="Ubah Data User">
                                     <i class="fa fa-edit"></i>
                                 </a>

@@ -20,7 +20,7 @@
             <div class="bg-black-op-75">
                 <div class="content content-top content-full text-center">
                     <div class="py-20">
-                        <h1 class="h2 font-w700 text-white mb-10">Purchase Request</h1>
+                        <h1 class="h2 font-w700 text-white mb-10">Purchase Order</h1>
                         <h2 class="h4 font-w400 text-white-op mb-0">PT Cahaya Mapan Moro Anugrah</h2>
                     </div>
                 </div>
@@ -33,19 +33,19 @@
             <div class="content">
                 <!-- Invoice -->
                 <h2 class="content-heading d-print-none">
-                    <form sec:authorize="hasAnyRole('ROLE_SO','ROLE_APPROVAL')" method="get" th:action="@{'/app/so/revPR'}">
-                        <input type="hidden" th:value="${pr.purchaseReqId}" name="getPR"/>
+                    <form sec:authorize="hasAnyRole('ROLE_SO','ROLE_APPROVAL')" method="get" th:action="@{'/app/so/revPO'}">
+                        <input type="hidden" th:value="${po.poId}" name="getPO"/>
                         <button type="submit" class="btn btn-sm btn-rounded btn-success float-right">Cek PR by SO</button>
                     </form>
-                    Detail Purchase Request
+                    Detail Purchase Order
                 </h2>
                 <div class="block">
                     <div class="block-header block-header-default">
-                        <h3 class="block-title"><a th:text="${pr.purchaseRequestNumber}"></a></h3>
+                        <h3 class="block-title"><a th:text="${po.poNumber}"></a></h3>
                         <div class="block-options">
                             <!-- Print Page functionality is initialized in Codebase() -> uiHelperPrint() -->
                             <button type="button" class="btn-block-option" onclick="Codebase.helpers('print-page');">
-                                <i class="si si-printer"></i> Print Purchase Request
+                                <i class="si si-printer"></i> Print Purchase Order
                             </button>
                             <button type="button" class="btn-block-option" data-toggle="block-option" data-action="fullscreen_toggle"></button>
                             <button type="button" class="btn-block-option" data-toggle="block-option" data-action="state_toggle" data-action-mode="demo">
@@ -58,11 +58,11 @@
                         <div class="row my-20">
                             <!-- Company Info -->
                             <div class="col-6">
-                                <p class="h3"><a th:text="${pr.outlet.masterLocation.locationName}"></a></p>
+                                <p class="h3"><a th:text="${po.outlet.masterLocation.locationName}"></a></p>
                                 <address>
-                                    <a th:text="${pr.outlet.masterLocation.address}"></a><br>
-                                    <a class="font-w600 mb-5 text-primary" th:text="${pr.user.firstName}"></a> <a class="font-w600 mb-5 text-primary" th:text="${pr.user.lastName}"></a><br>
-                                    <a th:text="${pr.user.email}"></a>
+                                    <a th:text="${po.outlet.masterLocation.address}"></a><br>
+                                    <a class="font-w600 mb-5 text-primary" th:text="${po.user.firstName}"></a> <a class="font-w600 mb-5 text-primary" th:text="${po.user.lastName}"></a><br>
+                                    <a th:text="${po.user.email}"></a>
                                 </address>
                             </div>
                             <!-- END Company Info -->
@@ -71,13 +71,13 @@
                             <div class="col-6 text-right">
                                 <!--<p class="h3">Client</p>-->
                                 <address>
-                                    Tanggal pakai: <a th:text="${pr.useDate}"></a><br>
+                                    Tanggal pakai: <a th:text="${po.lastModifiedDate}"></a><br>
                                     <blockquote class="blockquote text-right">
                                         <p><a class="blockquote-footer">Untuk Kebutuhan</a></p>
-                                        <p><a th:text="${pr.remarks}"></a></p>
+                                        <p><a th:text="${po.remarks}"></a></p>
                                     </blockquote>
                                 </address>
-                                <div th:switch="${pr.requestStatus.name()}">
+                                <div th:switch="${po.requestStatus.name()}">
                                     <span th:case="'TERTUNDA'" class="badge badge-secondary"><i class="fa fa-clock-o mr-5"></i>TERTUNDA</span>
                                     <span th:case="'DIPROSES'" class="badge badge-info"><i class="fa fa-cogs mr-5"></i>DIPROSES</span>
                                     <span th:case="'SELESAI'" class="badge badge-success"><i class="fa fa-check mr-5"></i>SELESAI</span>
@@ -97,7 +97,6 @@
                                     <th class="text-center" style="width: 60px;">No</th>
                                     <th>Produk</th>
                                     <th class="text-right" style="width: 120px;">Unit</th>
-                                    <th class="text-center" style="width: 90px;">Qty Diminta</th>
                                     <th class="text-center" style="width: 90px;">Qty Diajukan</th>
                                     <th class="text-right" style="width: 120px;">Catatan</th>
                                 </tr>
@@ -110,12 +109,9 @@
                                     </td>
                                     <td class="text-right"><a th:text="${itemReq.inventory.masterItem.unitItem.unitName}"></a></td>
                                     <td class="text-center">
-                                        <span class="badge badge-pill badge-primary"><a th:text="${itemReq.qtyReq}"></a></span>
+                                        <span class="badge badge-pill badge-info"><a th:text="${itemReq.quantity}"></a></span>
                                     </td>
-                                    <td class="text-center">
-                                        <span class="badge badge-pill badge-info"><a th:text="${itemReq.qtyRev}"></a></span>
-                                    </td>
-                                    <td class="text-right"><a th:text="${itemReq.itemRemarks}"></a></td>
+                                    <td class="text-right"><a th:text="${itemReq.itemRemark}"></a></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -145,7 +141,6 @@
 <script th:src="@{/assets/js/plugins/select2/select2.full.min.js}"></script>
 <script th:src="@{/assets/js/plugins/moment/datetime.js}"></script>
 <script th:src="@{/assets/js/jquery.spring-friendly.js}"></script>
-<script th:src="@{/assets/js/pages/pr-list.js}"></script>
 <!--Page JS Code -->
 <script>
     jQuery(function () {

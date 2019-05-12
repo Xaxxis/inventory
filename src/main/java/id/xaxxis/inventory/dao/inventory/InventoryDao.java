@@ -20,10 +20,13 @@ public interface InventoryDao extends DataTablesRepository<Inventory, String> {
 
     List<Inventory> findAllByMasterItem_CategoryItem_CategoryIdAndMasterLocation_LocationId(String categoryId, String locationId);
 
-    @Override
+
     DataTablesOutput<Inventory> findAll(DataTablesInput dataTablesInput, Specification<Inventory> specification);
 
     DataTablesOutput<Inventory> findAll(DataTablesInput input);
+
+    DataTablesOutput<Inventory> findAllByOutlet_OutletId(String outletId);
+
 
     @Override
     Optional<Inventory> findById(String invId);

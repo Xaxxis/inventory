@@ -2,6 +2,7 @@ package id.xaxxis.inventory.service.spesification.purchasing;
 
 import id.xaxxis.inventory.entity.master.user.User;
 import id.xaxxis.inventory.entity.purchasing.request.PurchaseRequest;
+import id.xaxxis.inventory.enums.RequestStatus;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +20,9 @@ public class PrLocationSpesification implements Specification<PurchaseRequest> {
     public Predicate toPredicate(Root<PurchaseRequest> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
-        return criteriaBuilder.equal(root.get("masterLocation") ,  user.getMasterLocation());
+        if(user.getRoles().toString().contains("PURCHASING")){
+            return criteriaBuilder.equal(root.get("requestStatus"), RequestStatus.valueOf("DIAJUKAN"));
+        }
+        return criteriaBuilder.equal(root.get("outlet").get("masterLocation") ,  user.getOutlet().getMasterLocation());
     }
 }

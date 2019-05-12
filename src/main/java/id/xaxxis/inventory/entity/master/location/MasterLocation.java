@@ -1,5 +1,6 @@
 package id.xaxxis.inventory.entity.master.location;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 @Data
 @Table(name = "master_location")
 @EqualsAndHashCode
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class MasterLocation {
 
     @Id

@@ -17,8 +17,9 @@ public class InventorySpecification implements Specification<Inventory> {
     public Predicate toPredicate(Root<Inventory> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
-        return criteriaBuilder.and(criteriaBuilder.equal(root.get("masterLocation"), user.getOutlet().getMasterLocation()));
+        if(user.getRoles().toString().contains("HO")){
+           return criteriaBuilder.and(criteriaBuilder.equal(root.get("masterLocation"), user.getOutlet().getMasterLocation()));
+        }
+        return criteriaBuilder.and(criteriaBuilder.equal(root.get("outlet"), user.getOutlet()));
     }
-
-
 }

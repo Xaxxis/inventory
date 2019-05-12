@@ -45,8 +45,10 @@ public class PurchaseOrderDetail {
     private String itemRemark;
 
     @Transient
-    public BigDecimal getSubTotalPrice(){
-        return BigDecimal.valueOf(getQuantity()).multiply(getSubTotal());
-    }
+    private BigDecimal subtot;
 
+    @PostLoad
+    public void getSubTotalPrice(){
+        this.subtot = BigDecimal.valueOf(getQuantity()).multiply(getItemPrice());
+    }
 }

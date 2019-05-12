@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import id.xaxxis.inventory.entity.BaseEntity;
-import id.xaxxis.inventory.entity.master.location.MasterLocation;
+import id.xaxxis.inventory.entity.master.location.Outlet;
 import id.xaxxis.inventory.entity.master.user.User;
 import id.xaxxis.inventory.enums.RequestStatus;
 import lombok.Data;
@@ -47,8 +47,8 @@ public class PurchaseRequest extends BaseEntity {
     @JsonManagedReference
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "address"})
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "location_id")
-    private MasterLocation masterLocation;
+    @JoinColumn(name = "outlet_id")
+    private Outlet outlet;
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "status", length = 30)
@@ -63,8 +63,12 @@ public class PurchaseRequest extends BaseEntity {
     private Integer version;
 
     @Transient
-    public Integer qtyOfItem(){
-        return requestItemList.size();
+    private Integer totalItem;
+
+    @PostLoad
+    public void qtyOfItem(){
+        this.totalItem = requestItemList.size();
     }
+
 
 }

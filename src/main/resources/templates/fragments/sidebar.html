@@ -1,6 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <nav id="sidebar">
     <div id="sidebar-scroll">
         <div class="sidebar-content">
@@ -55,32 +55,32 @@
             </div>
             <!-- Side Navigation -->
             <div class="content-side content-side-full">
-                <ul class="nav-main">
+                    <ul class="nav-main">
                     <li>
                         <a th:href="@{be_pages_dashboard.html}"><i class="si si-cup"></i><span class="sidebar-mini-hide">Dashboard</span></a>
                     </li>
-                    <li class="nav-main-heading"><span class="sidebar-mini-visible">UI</span><span class="sidebar-mini-hidden">Modul Aplikasi</span></li>
-                    <li th:class="${openUser}">
-                        <a class="nav-submenu" data-toggle="nav-submenu" th:href="@{#}"><i class="si si-puzzle"></i><span class="sidebar-mini-hide">Administrator</span></a>
-                        <ul>
-                            <li>
+                        <li class="nav-main-heading"><span class="sidebar-mini-visible">UI</span><span class="sidebar-mini-hidden">Modul Aplikasi</span></li>
+                        <li sec:authorize="hasAnyRole('ROLE_ADMIN')" th:class="${openUser}">
+                            <a class="nav-submenu" data-toggle="nav-submenu" th:href="@{#}"><i class="si si-puzzle"></i><span class="sidebar-mini-hide">Administrator</span></a>
+                            <ul>
+                                <li>
                                 <a th:class="${activeUser}" th:href="@{/app/user/register}">Registrasi User</a>
                             </li>
-                            <li>
+                                <li>
                                 <a th:class="${userListActive}" th:href="@{/app/user/list}">List Data User</a>
                             </li>
-                            <li>
+                                <li>
                                 <a th:class="${locationActive}" th:href="@{/app/location/}">Master Lokasi</a>
                             </li>
-                            <li>
+                                <li>
                                 <a th:class="${outletActive}" th:href="@{/app/location/outlet}">Master Toko</a>
                             </li>
-                        </ul>
-                    </li>
+                            </ul>
+                        </li>
                     <li th:class="${invOpen}">
-                        <a class="nav-submenu" data-toggle="nav-submenu" th:href="@{#}"><i class="si si-folder-alt"></i><span class="sidebar-mini-hide">Inventory</span></a>
+                        <a class="nav-submenu" data-toggle="nav-submenu" th:href="@{#}"><i class="si si-folder-alt"></i><span class="sidebar-mini-hide">Gudang</span></a>
                         <ul>
-                            <li th:class="${iukOpen}">
+                            <li sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_SO')" th:class="${iukOpen}">
                                 <a class="nav-submenu" data-toggle="nav-submenu" th:href="@{#}">Item, Unit &amp; Kategori</a>
                                 <ul>
                                     <li>
@@ -95,10 +95,10 @@
                                 </ul>
                             </li>
                             <li>
-                                <a th:class="${whActive}" th:href="@{/app/inv/warehouse}">Gudang</a>
+                                <a th:class="${whActive}" th:href="@{/app/inv/warehouse}">Master Gudang</a>
                             </li>
                             <li>
-                                <a th:class="${reqActive}" th:href="@{/app/inv/request}">Request Barang</a>
+                                <a th:class="${reqActive}" th:href="@{/app/purchasing/request}">Request Barang</a>
                             </li>
                             <li>
                                 <a th:class="${siActive}" th:href="@{/app/inv/stock-in}">Barang Masuk</a>
@@ -108,7 +108,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li th:class="${purchaseOpen}">
+                    <li sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_PURCHASING')" th:class="${purchaseOpen}">
                         <a class="nav-submenu" data-toggle="nav-submenu" th:href="@{#}"><i class="si si-basket-loaded"></i><span class="sidebar-mini-hide">Purchasing</span></a>
                         <ul>
                             <li>
@@ -118,13 +118,24 @@
                                 <a th:class="${requestActive}" th:href="@{/app/purchasing/request}">Purchase Request</a>
                             </li>
                             <li>
-                                <a th:href="@{/app/purchasing/request/list}">Request List</a>
+                                <a th:href="@{sss}">Purchase Order</a>
                             </li>
                             <li>
-                                <a th:href="@{sss}">Purchase Order</a>
+                                <a th:class="${poListActive}" th:href="@{/app/purchasing/order/list}">Purchase Order List</a>
                             </li>
                         </ul>
                     </li>
+                        <li sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_SO')" th:class="${soOpen}">
+                            <a class="nav-submenu" data-toggle="nav-submenu" th:href="@{#}"><i class="si si-book-open"></i><span class="sidebar-mini-hide">Stock Opname</span></a>
+                            <ul>
+                                <li>
+                                    <a th:href="@{/app/purchasing/request/list}">Request List</a>
+                                </li>
+                                <li>
+                                    <a th:href="@{sss}">Purchase Order</a>
+                                </li>
+                            </ul>
+                        </li>
                 </ul>
             </div>
         </div>

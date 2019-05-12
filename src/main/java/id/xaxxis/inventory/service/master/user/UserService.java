@@ -1,5 +1,7 @@
 package id.xaxxis.inventory.service.master.user;
 
+import id.xaxxis.inventory.entity.master.location.MasterLocation;
+import id.xaxxis.inventory.entity.master.location.Outlet;
 import id.xaxxis.inventory.entity.master.user.User;
 
 import java.util.List;
@@ -17,6 +19,10 @@ public interface UserService {
     boolean checkEmailExist(String email);
     boolean checkUsernameExist(String username);
     boolean checkOldPassword(String oldPassword, String password);
+
+    boolean checkOutletEqualLocation(Outlet outlet, MasterLocation masterLocation);
+
+    boolean hasRole(String role);
 
 
 

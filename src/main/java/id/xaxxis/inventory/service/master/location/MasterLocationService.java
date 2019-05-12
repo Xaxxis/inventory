@@ -18,4 +18,6 @@ public interface MasterLocationService {
     Outlet findByOutletId(String outletId);
     List<Outlet> findAllOutlet();
     List<Outlet> findAllOutletByLoc();
+
+    String gengerateIdOutlet();
 }

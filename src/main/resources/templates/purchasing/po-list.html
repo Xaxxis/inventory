@@ -20,8 +20,8 @@
             <div class="bg-black-op-75">
                 <div class="content content-top content-full text-center">
                     <div class="py-20">
-                        <h1 class="h2 font-w700 text-white mb-10">Daftar Purchase Request</h1>
-                        <h2 class="h4 font-w400 text-white-op mb-0">Anda berada dimenu data permintaan barang.</h2>
+                        <h1 class="h2 font-w700 text-white mb-10">Daftar Purchase Order</h1>
+                        <h2 class="h4 font-w400 text-white-op mb-0">Anda berada dimenu data purchase order.</h2>
                     </div>
                 </div>
             </div>
@@ -30,80 +30,80 @@
         <!-- Page Content -->
         <div class="content">
             <div sec:authorize="isAuthenticated()">
-                <div sec:authorize="hasRole('ROLE_ADMIN')">
+                <div sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_APPROVAL')">
                     <div class="row gutters-tiny">
-                <!-- Pending -->
-                <div class="col-md-6 col-xl-3">
-                    <a class="block block-rounded block-transparent bg-gd-sun" href="javascript:void(0)">
-                        <div class="block-content block-content-full block-sticky-options">
-                            <div class="block-options">
-                                <div class="block-options-item">
-                                    <i class="fa fa-spinner fa-spin text-white-op"></i>
+                        <!-- Pending -->
+                        <div class="col-md-6 col-xl-3">
+                            <a class="block block-rounded block-transparent bg-gd-sun" href="javascript:void(0)">
+                                <div class="block-content block-content-full block-sticky-options">
+                                    <div class="block-options">
+                                        <div class="block-options-item">
+                                            <i class="fa fa-spinner fa-spin text-white-op"></i>
+                                        </div>
+                                    </div>
+                                    <div class="py-20 text-center">
+                                        <div class="font-size-h2 font-w700 mb-0 text-white" data-toggle="countTo" th:attr="data-to=${proses}">0</div>
+                                        <div class="font-size-sm font-w600 text-uppercase text-white-op">Proses</div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="py-20 text-center">
-                                <div class="font-size-h2 font-w700 mb-0 text-white" data-toggle="countTo" th:attr="data-to=${proses}">0</div>
-                                <div class="font-size-sm font-w600 text-uppercase text-white-op">Proses</div>
-                            </div>
+                            </a>
                         </div>
-                    </a>
-                </div>
-                <!-- END Pending -->
+                        <!-- END Pending -->
 
-                <!-- Canceled -->
-                <div class="col-md-6 col-xl-3">
-                    <a class="block block-rounded block-transparent bg-gd-cherry" href="javascript:void(0)">
-                        <div class="block-content block-content-full block-sticky-options">
-                            <div class="block-options">
-                                <div class="block-options-item">
-                                    <i class="fa fa-times text-white-op"></i>
+                        <!-- Canceled -->
+                        <div class="col-md-6 col-xl-3">
+                            <a class="block block-rounded block-transparent bg-gd-cherry" href="javascript:void(0)">
+                                <div class="block-content block-content-full block-sticky-options">
+                                    <div class="block-options">
+                                        <div class="block-options-item">
+                                            <i class="fa fa-times text-white-op"></i>
+                                        </div>
+                                    </div>
+                                    <div class="py-20 text-center">
+                                        <div class="font-size-h2 font-w700 mb-0 text-white" data-toggle="countTo" th:attr="data-to=${batal}"></div>
+                                        <div class="font-size-sm font-w600 text-uppercase text-white-op">Dibatalkan</div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="py-20 text-center">
-                                <div class="font-size-h2 font-w700 mb-0 text-white" data-toggle="countTo" th:attr="data-to=${batal}"></div>
-                                <div class="font-size-sm font-w600 text-uppercase text-white-op">Dibatalkan</div>
-                            </div>
+                            </a>
                         </div>
-                    </a>
-                </div>
-                <!-- END Canceled -->
+                        <!-- END Canceled -->
 
-                <!-- Completed -->
-                <div class="col-md-6 col-xl-3">
-                    <a class="block block-rounded block-transparent bg-gd-lake" href="javascript:void(0)">
-                        <div class="block-content block-content-full block-sticky-options">
-                            <div class="block-options">
-                                <div class="block-options-item">
-                                    <i class="fa fa-check text-white-op"></i>
+                        <!-- Completed -->
+                        <div class="col-md-6 col-xl-3">
+                            <a class="block block-rounded block-transparent bg-gd-lake" href="javascript:void(0)">
+                                <div class="block-content block-content-full block-sticky-options">
+                                    <div class="block-options">
+                                        <div class="block-options-item">
+                                            <i class="fa fa-check text-white-op"></i>
+                                        </div>
+                                    </div>
+                                    <div class="py-20 text-center">
+                                        <div class="font-size-h2 font-w700 mb-0 text-white" data-toggle="countTo" th:attr="data-to=${selesai}">0</div>
+                                        <div class="font-size-sm font-w600 text-uppercase text-white-op">Selesai</div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="py-20 text-center">
-                                <div class="font-size-h2 font-w700 mb-0 text-white" data-toggle="countTo" th:attr="data-to=${selesai}">0</div>
-                                <div class="font-size-sm font-w600 text-uppercase text-white-op">Selesai</div>
-                            </div>
+                            </a>
                         </div>
-                    </a>
-                </div>
-                <!-- END Completed -->
+                        <!-- END Completed -->
 
-                <!-- All -->
-                <div class="col-md-6 col-xl-3">
-                    <a class="block block-rounded block-transparent bg-gd-dusk" href="javascript:void(0)">
-                        <div class="block-content block-content-full block-sticky-options">
-                            <div class="block-options">
-                                <div class="block-options-item">
-                                    <i class="fa fa-archive text-white-op"></i>
+                        <!-- All -->
+                        <div class="col-md-6 col-xl-3">
+                            <a class="block block-rounded block-transparent bg-gd-dusk" href="javascript:void(0)">
+                                <div class="block-content block-content-full block-sticky-options">
+                                    <div class="block-options">
+                                        <div class="block-options-item">
+                                            <i class="fa fa-archive text-white-op"></i>
+                                        </div>
+                                    </div>
+                                    <div class="py-20 text-center">
+                                        <div class="font-size-h2 font-w700 mb-0 text-white" data-toggle="countTo" th:attr="data-to=${tertunda}">0</div>
+                                        <div class="font-size-sm font-w600 text-uppercase text-white-op">Tertunda</div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="py-20 text-center">
-                                <div class="font-size-h2 font-w700 mb-0 text-white" data-toggle="countTo" th:attr="data-to=${tertunda}">0</div>
-                                <div class="font-size-sm font-w600 text-uppercase text-white-op">Tertunda</div>
-                            </div>
+                            </a>
                         </div>
-                    </a>
-                </div>
-                <!-- END All -->
-            </div>
+                        <!-- END All -->
+                    </div>
                 </div>
             </div>
             <!-- END Statistics -->
@@ -138,7 +138,7 @@
                 </div>
                 <div class="block-content">
                     <!-- Orders Table -->
-                    <table id="prs" class="table table-responsive table-borderless table-striped">
+                    <table id="poList" class="table table-responsive table-borderless table-striped">
                         <thead>
                         <tr>
                             <th style="width: 100px;">No PR</th>
@@ -170,7 +170,7 @@
 <script th:src="@{/assets/js/plugins/moment/datetime.js}"></script>
 <script th:src="@{/assets/js/jquery.spring-friendly.js}"></script>
 <script th:src="@{/assets/js/pages/pr-list.js}"></script>
- <!--Page JS Code -->
+<!--Page JS Code -->
 <script>
     jQuery(function () {
         Codebase.helpers(['select2', 'tags-inputs', 'datepicker']);

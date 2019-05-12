@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" xmlns:sec="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       layout:decorate="layout">
 <head th:replace="layout :: common-header">
     <title>Menu Kategory Barang</title>
@@ -35,8 +35,8 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="cat : ${categoryList}">
-                            <td style="text-align:left;" th:text="${cat.categoryId}"></td>
+                        <tr th:each="cat, iterator : ${categoryList}">
+                            <td style="text-align:left;" th:text="${iterator.index + 1}"></td>
                             <td style="display: none;"></td>
                             <td class="font-w600" th:text="${cat.categoryName}"></td>
                             <td class="d-none d-sm-table-cell"></td>

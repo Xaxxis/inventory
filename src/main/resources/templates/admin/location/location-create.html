@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" xmlns:sec="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       layout:decorate="layout">
 <head th:replace="layout :: common-header">
     <title>Menu Master Lokasi</title>
@@ -35,8 +36,8 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="location : ${locationList}">
-                            <td style="text-align:center;" class="">1</td>
+                        <tr th:each="location, iterator : ${locationList}">
+                            <td style="text-align:center;" class=""><a th:text="${iterator.index +1}"></a></td>
                             <td style="display: none;" th:text="${location.locationId}"></td>
                             <td class="font-w600" th:text="${location.locationName}"></td>
                             <td class="d-none d-sm-table-cell" th:text="${location.address}"></td>
@@ -120,13 +121,8 @@
                                 class="text-danger">*</span></label>
                         <div class="col-lg-8">
                             <div class="input-group">
-                                <div class="input-group-prepend">
-                                                                                <span class="input-group-text">
-                                                                                    <i class="fa fa-location-arrow"></i>
-                                                                                </span>
-                                </div>
-                                <input th:maxlength="30" data-parsley-required="true" data-parsley-required-message="Nama lokasi, wajib diisi" type="text" class="form-control" id="locationName"
-                                       name="locationName" placeholder="Lokasi..."/>
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-location-arrow"></i></span></div>
+                                <input th:maxlength="30" data-parsley-required="true" data-parsley-required-message="Nama lokasi, wajib diisi" type="text" class="form-control" id="locationName" name="locationName" placeholder="Lokasi..."/>
                             </div>
                         </div>
                     </div>

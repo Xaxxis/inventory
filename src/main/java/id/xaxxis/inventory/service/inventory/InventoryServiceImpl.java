@@ -3,6 +3,7 @@ package id.xaxxis.inventory.service.inventory;
 import id.xaxxis.inventory.dao.inventory.InventoryDao;
 import id.xaxxis.inventory.entity.inventory.Inventory;
 import id.xaxxis.inventory.entity.master.user.User;
+import id.xaxxis.inventory.service.master.user.UserService;
 import id.xaxxis.inventory.service.spesification.inventory.InventorySpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
@@ -18,9 +19,12 @@ public class InventoryServiceImpl implements InventoryService {
 
     private final InventoryDao inventoryDao;
 
+    private final UserService userService;
+
     @Autowired
-    public InventoryServiceImpl(InventoryDao inventoryDao) {
+    public InventoryServiceImpl(InventoryDao inventoryDao, UserService userService) {
         this.inventoryDao = inventoryDao;
+        this.userService = userService;
     }
 
     @Override
@@ -74,8 +78,13 @@ public class InventoryServiceImpl implements InventoryService {
         if(locationId.equals("ff8080816985d94101698633a8ad0000")){
             return inventoryDao.findAll(input);
         }
-        InventorySpecification specification = new InventorySpecification();
-        return inventoryDao.findAll(input, specification);
+        InventorySpecification spec = new InventorySpecification();
+        return inventoryDao.findAll(input, spec);
+    }
+
+    @Override
+    public DataTablesOutput<Inventory> findAllByOutlet(String outletId) {
+        return inventoryDao.findAllByOutlet_OutletId(outletId);
     }
 
 

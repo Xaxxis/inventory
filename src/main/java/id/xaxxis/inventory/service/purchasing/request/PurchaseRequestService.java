@@ -46,5 +46,7 @@ public interface PurchaseRequestService {
 
     PurchaseRequestItem savePrItem(PurchaseRequestItem purchaseRequestItem);
 
+    boolean checkReStatus(RequestStatus requestStatus);
+
 
 }

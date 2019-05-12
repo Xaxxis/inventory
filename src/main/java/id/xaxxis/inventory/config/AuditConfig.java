@@ -24,6 +24,7 @@ class AuditConfig {
     }
 
     public static class SecurityAuditor implements AuditorAware<String> {
+
         @Override
         public Optional<String> getCurrentAuditor() {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();

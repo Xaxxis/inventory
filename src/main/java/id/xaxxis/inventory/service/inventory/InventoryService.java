@@ -20,4 +20,6 @@ public interface InventoryService {
     Optional<Inventory> findByInvId(String invId);
 
     DataTablesOutput<Inventory> findAllApi(DataTablesInput input);
+
+    DataTablesOutput<Inventory> findAllByOutlet(String outletId);
 }
