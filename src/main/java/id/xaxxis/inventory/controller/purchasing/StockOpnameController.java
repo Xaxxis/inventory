@@ -2,6 +2,7 @@ package id.xaxxis.inventory.controller.purchasing;
 
 import id.xaxxis.inventory.entity.purchasing.request.PurchaseRequest;
 import id.xaxxis.inventory.entity.purchasing.request.PurchaseRequestItem;
+import id.xaxxis.inventory.enums.RequestStatus;
 import id.xaxxis.inventory.service.purchasing.order.PurchaseOrderService;
 import id.xaxxis.inventory.service.purchasing.request.PurchaseRequestService;
 import org.springframework.security.access.annotation.Secured;
@@ -58,17 +59,24 @@ public class StockOpnameController {
                            @RequestParam(required = false, value = "submit") String submit) {
         PurchaseRequest purchaseRequest = purchaseRequestService.findByPrId(id);
         if (action.equalsIgnoreCase("Save")) {
-            purchaseRequestService.savePr(purchaseRequest);
-            for (int i = 0; i < itemId.size(); i++) {
-                PurchaseRequestItem purchaseRequestItem = purchaseRequestService.findByitemReqId(itemId.get(i));
-                purchaseRequestItem.setQtyRev(revQty.get(i));
-                purchaseRequestItem.setItemRemarks(revRemarks.get(i));
-                purchaseRequestService.savePrItem(purchaseRequestItem);
-            }
+            purchaseRequest.setRequestStatus(RequestStatus.REVISI);
+            purchaseRequest.setVersion(purchaseRequest.getVersion()+1);
+            saveItemPR(itemId, revQty, revRemarks, purchaseRequest);
         } else if (action.equalsIgnoreCase("Submit")) {
-            purchaseOrderService.createPO(id);
+            purchaseRequest.setRequestStatus(RequestStatus.DIPROSES);
+            saveItemPR(itemId, revQty, revRemarks, purchaseRequest);
             return "redirect:/app/purchasing/request/list";
         }
         return "redirect:/app/purchasing/request/list";
+    }
+
+    private void saveItemPR(@RequestParam("itemId") List<String> itemId, @RequestParam("revQty") List<Integer> revQty, @RequestParam("revRemarks") List<String> revRemarks, PurchaseRequest purchaseRequest) {
+        purchaseRequestService.savePr(purchaseRequest);
+        for (int i = 0; i < itemId.size(); i++) {
+            PurchaseRequestItem purchaseRequestItem = purchaseRequestService.findByitemReqId(itemId.get(i));
+            purchaseRequestItem.setQtyRev(revQty.get(i));
+            purchaseRequestItem.setItemRemarks(revRemarks.get(i));
+            purchaseRequestService.savePrItem(purchaseRequestItem);
+        }
     }
 }

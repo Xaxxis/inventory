@@ -3,6 +3,9 @@
       layout:decorate="layout">
 <head th:replace="layout :: common-header">
     <title>E-Customer Register</title>
+    <style type="text/css">
+
+    </style>
 </head>
 <body>
 <style>
@@ -21,7 +24,8 @@
                 <div class="content content-top content-full text-center">
                     <div class="py-20">
                         <h1 class="h2 font-w700 text-white mb-10">Purchase Order</h1>
-                        <h2 class="h4 font-w400 text-white-op mb-0">PT Cahaya Mapan Moro Anugrah</h2>
+                        <h2 class="h4 font-w400 text-white-op mb-0">Lapas <a th:text="${po.outlet.masterLocation.locationName}"></a></a></h2>
+                        <h2 class="h5 font-w400 text-white-op mb-0"><a th:text="${po.outlet.masterLocation.address}"></a></h2>
                     </div>
                 </div>
             </div>
@@ -33,19 +37,20 @@
             <div class="content">
                 <!-- Invoice -->
                 <h2 class="content-heading d-print-none">
-                    <form sec:authorize="hasAnyRole('ROLE_SO','ROLE_APPROVAL')" method="get" th:action="@{'/app/so/revPO'}">
-                        <input type="hidden" th:value="${po.poId}" name="getPO"/>
-                        <button type="submit" class="btn btn-sm btn-rounded btn-success float-right">Cek PR by SO</button>
+                    <form sec:authorize="hasAnyRole('ROLE_PURCHASING')" method="get" th:action="@{'/app/purchasing/order/reqRevPR'}">
+                        <input type="hidden" th:value="${po.poId}" name="number"/>
+                        <button type="submit" class="btn btn-sm btn-rounded btn-success float-right">REVISI</button>
                     </form>
-                    Detail Purchase Order
+                    Detail Purchase Request
                 </h2>
+                <form th:action="@{'/app/purchasing/order/submit'}">
                 <div class="block">
                     <div class="block-header block-header-default">
                         <h3 class="block-title"><a th:text="${po.poNumber}"></a></h3>
                         <div class="block-options">
                             <!-- Print Page functionality is initialized in Codebase() -> uiHelperPrint() -->
                             <button type="button" class="btn-block-option" onclick="Codebase.helpers('print-page');">
-                                <i class="si si-printer"></i> Print Purchase Order
+                                <i class="si si-printer"></i> Print
                             </button>
                             <button type="button" class="btn-block-option" data-toggle="block-option" data-action="fullscreen_toggle"></button>
                             <button type="button" class="btn-block-option" data-toggle="block-option" data-action="state_toggle" data-action-mode="demo">
@@ -71,7 +76,7 @@
                             <div class="col-6 text-right">
                                 <!--<p class="h3">Client</p>-->
                                 <address>
-                                    Tanggal pakai: <a th:text="${po.lastModifiedDate}"></a><br>
+                                    Tanggal pakai: <a th:text="${po.createdDate}"></a><br>
                                     <blockquote class="blockquote text-right">
                                         <p><a class="blockquote-footer">Untuk Kebutuhan</a></p>
                                         <p><a th:text="${po.remarks}"></a></p>
@@ -91,27 +96,49 @@
 
                         <!-- Table -->
                         <div class="table-responsive push">
-                            <table class="table table-bordered table-striped table-hover" >
+                            <table id="tablePO" class="table table-bordered table-striped table-hover" >
                                 <thead>
                                 <tr>
-                                    <th class="text-center" style="width: 60px;">No</th>
+                                    <th class="text-center" style="width: 10px;">No</th>
                                     <th>Produk</th>
-                                    <th class="text-right" style="width: 120px;">Unit</th>
-                                    <th class="text-center" style="width: 90px;">Qty Diajukan</th>
-                                    <th class="text-right" style="width: 120px;">Catatan</th>
+                                    <th class="text-right" style="width: 20px;">Unit</th>
+                                    <th class="text-center" style="width: 20px;">Qty</th>
+                                    <th class="text-right" style="width: 120px;">Harga Satuan</th>
+                                    <th class="text-right" style="width: 60px;">Rincian</th>
+                                    <th class="text-center" style="width: 150px;">Total</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="itemReq, iterator : ${itemList}">
+                                <tr class="fields" th:each="itemReq, iterator : ${itemList}">
+                                    <td style="display: none"><input type="hidden" name="poDetailId" th:value="${itemReq.poDetailId}"/></td>
                                     <td class="text-center" th:text="${iterator.index + 1}"></td>
-                                    <td><p class="text-muted"><a th:text="${itemReq.inventory.masterItem.itemBarcode}"></a></p>
-                                        <div class="font-w600 mb-5"><a th:text="${itemReq.inventory.masterItem.itemName}"></a></div>
+                                    <td><a class="small"><a th:text="${itemReq.inventory.masterItem.itemBarcode}"></a><br/>
+                                        <a class="font-w600 mb-5"th:text="${itemReq.inventory.masterItem.itemName}"></a>
+                                    </a>
                                     </td>
                                     <td class="text-right"><a th:text="${itemReq.inventory.masterItem.unitItem.unitName}"></a></td>
                                     <td class="text-center">
-                                        <span class="badge badge-pill badge-info"><a th:text="${itemReq.quantity}"></a></span>
+                                        <span class="badge badge-pill badge-info"><a class="quantity" id="quantity" th:text="${itemReq.quantity}"></a></span>
                                     </td>
-                                    <td class="text-right"><a th:text="${itemReq.itemRemark}"></a></td>
+                                    <td class="text-right">
+                                        <input class="price" th:value="${itemReq.itemPrice}" id="value2" th:readonly="true" name="itemPrice"/>
+                                    </td>
+                                    <td class="text-right"><a th:text="${itemReq.itemRemark}" ></a></td>
+                                    <td class="text-right">
+                                        <a><input class="total" value="0" name="subTotal"/></a>
+                                    </td>
+                                </tr>
+                                <tr class="fields">
+                                    <td colspan="6" class="font-w600 text-right">Subtotal</td>
+                                    <td class="text-right"><input class="subTotal" type="text" th:readonly="true"/></td>
+                                </tr>
+                                <tr class="fields">
+                                    <td colspan="6" class="font-w600 text-right">Discount</td>
+                                    <td class="text-right"><input class="discount" name="discount" value="0" type="text"/></td>
+                                </tr>
+                                <tr class="fields table-warning ">
+                                    <td colspan="6" class="font-w700 text-uppercase text-right">Grand Total</td>
+                                    <td class="font-w700 text-right"><input  id="uang" class="gTotal uang" name="grandTotal" th:readonly="true" type="text"/></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -119,11 +146,32 @@
                         <!-- END Table -->
 
                         <!-- Footer -->
-                        <p class="text-muted text-center">Thank you very much for doing business with us. We look forward to working with you again!</p>
+                        <!--<h3 class="block-title"><b> Ver.<a th:text="${po.}"></a></b><small> revisi terakhir oleh <a th:text="${po.lastModifiedBy}"></a> pada <a th:text="${po.lastModifiedDate != null ? #dates.format(po.lastModifiedDate, 'HH:mm:ss dd-MM-yyyy') : ''}"></a></small></h3>-->
                         <!-- END Footer -->
                     </div>
                 </div>
                 <!-- END Invoice -->
+                <div class="form-group col row d-print-none">
+                    <div class="md-10" sec:authorize="hasRole('ROLE_PURCHASING')">
+                        <input type="submit" name="action" value="Submit" class="btn btn-hero btn-sm btn-rounded btn-noborder btn-warning"/>
+                        <!--<i class="fa fa-upload mr-5"></i> Submit</input>-->
+                    </div>
+                    <div class="md-10">
+                        <input type="submit" name="action" value="Save" class="btn btn-hero btn-sm btn-rounded btn-noborder btn-success"/>
+                        <!--<i class="fa fa-save mr-5"></i> Simpan</input>-->
+                    </div>
+                    <div class="md-10">
+                        <a onclick="goBack()" class="btn btn-hero btn-sm btn-rounded btn-noborder btn-alt-secondary">
+                            <i class="fa fa-close mr-5"></i> Batal
+                        </a>
+                        <script>
+                            function goBack() {
+                                window.history.back();
+                            }
+                        </script>
+                    </div>
+                </div>
+                </form>
             </div>
             <!-- END Page Content -->
 
@@ -136,16 +184,44 @@
 
 
 <div th:replace="layout :: body-bottom-scripts"></div>
-<script th:src="@{/assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}"></script>
+<script th:src="@{/assets/js/plugins/jmask/jquery.mask.js}"></script>
 <script th:src="@{/assets/js/plugins/DataTables/datatables.min.js}"></script>
-<script th:src="@{/assets/js/plugins/select2/select2.full.min.js}"></script>
+<script th:src="@{/assets/js/plugins/parsley/dist/parsley.min.js}"></script>
 <script th:src="@{/assets/js/plugins/moment/datetime.js}"></script>
 <script th:src="@{/assets/js/jquery.spring-friendly.js}"></script>
 <!--Page JS Code -->
+
 <script>
-    jQuery(function () {
-        Codebase.helpers(['select2', 'tags-inputs', 'datepicker']);
+    $(function() {
+        $("#tablePO").keyup(function(event) {
+            var sub = 0;
+            var grandTotal = 0;
+            $("#tablePO .fields").each(function() {
+
+                var qty = parseFloat($(this).find(".quantity").text());
+                var total = parseFloat($(this).find(".total").val());
+
+                var itemPrice = total / qty;
+                $(this).find(".price").val(itemPrice);
+
+                if(!isNaN(total)) sub += total;
+
+
+
+            });
+            var discount = parseFloat($(this).find(".discount").val());
+            var afterDiscount = sub - discount;
+
+            $(".gTotal").val(afterDiscount);
+            $(".subTotal").val(sub);
+            $('#uang').mask('000.000.000', {reverse: true});
+        });
     });
 </script>
+<!--<script>-->
+<!--    $(document).ready(function() {-->
+<!--        $('.gTotal').mask("#.##0,00", {reverse: true});-->
+<!--    });-->
+<!--</script>-->
 </body>
 </html>

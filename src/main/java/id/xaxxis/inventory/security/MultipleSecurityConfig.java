@@ -98,7 +98,7 @@ public class MultipleSecurityConfig {
                     .antMatchers("/app/inventory/list").access("permitAll()")
                     .antMatchers("/app/inv/warehouse").access("permitAll()")
                     .antMatchers("/app/inv/**").access("hasAnyRole('ADMIN','GUDANG')")
-                    .antMatchers("/app/purchasing/request/**").access("hasAnyRole('ADMIN','GUDANG','SO')")
+                    .antMatchers("/app/purchasing/request/**").access("hasAnyRole('ADMIN','GUDANG','SO','PURCHASING','KASIR')")
                     .antMatchers("/app/purchasing/**").access("hasAnyRole('ADMIN','GUDANG','PURCHASING')")
                     .antMatchers("/app/so/**").access("hasAnyRole('ADMIN','SO')")
                     .antMatchers("/app/**").access("hasRole('ADMIN')")

@@ -21,7 +21,9 @@ public class PrLocationSpesification implements Specification<PurchaseRequest> {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
         if(user.getRoles().toString().contains("PURCHASING")){
-            return criteriaBuilder.equal(root.get("requestStatus"), RequestStatus.valueOf("DIAJUKAN"));
+            return criteriaBuilder.equal(root.get("requestStatus"), RequestStatus.valueOf("DIPROSES"));
+        }else if(user.getRoles().toString().contains("SO")){
+            return criteriaBuilder.equal(root.get("requestStatus"), RequestStatus.valueOf(""));
         }
         return criteriaBuilder.equal(root.get("outlet").get("masterLocation") ,  user.getOutlet().getMasterLocation());
     }

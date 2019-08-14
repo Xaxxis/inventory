@@ -44,6 +44,9 @@ public class User implements UserDetails {
     @NotEmpty(message = "*Email tidak boleh kosong")
     private String email;
 
+    @Column(name = "phone", length = 15)
+    private String phoneNumber;
+
     @Lob
     @Column(name = "Image", length = Integer.MAX_VALUE, nullable = true)
     private byte[] image;

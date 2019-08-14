@@ -19,6 +19,8 @@ public class InventorySpecification implements Specification<Inventory> {
         User user = (User) auth.getPrincipal();
         if(user.getRoles().toString().contains("HO")){
            return criteriaBuilder.and(criteriaBuilder.equal(root.get("masterLocation"), user.getOutlet().getMasterLocation()));
+        } else if(user.getRoles().toString().contains("GUDANG") && !user.getMasterLocation().getLocationId().equals("ff8080816985d94101698633a8ad0000")){
+            return criteriaBuilder.and(criteriaBuilder.equal(root.get("masterLocation"), user.getOutlet().getMasterLocation()));
         }
         return criteriaBuilder.and(criteriaBuilder.equal(root.get("outlet"), user.getOutlet()));
     }

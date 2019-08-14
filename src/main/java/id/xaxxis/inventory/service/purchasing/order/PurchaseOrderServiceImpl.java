@@ -38,8 +38,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     }
 
     @Override
-    public PurchaseOrderDetail savePurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail) {
-        return purchaseOrderDetailDao.save(purchaseOrderDetail);
+    public PurchaseOrderDetail savePurchaseOrderDetail(Optional<PurchaseOrderDetail> purchaseOrderDetail) {
+        return purchaseOrderDetailDao.save(purchaseOrderDetail.get());
     }
 
     @Override
@@ -53,8 +53,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         PurchaseRequest purchaseRequest = purchaseRequestService.findByPrId(id);
         Optional<PurchaseOrder> po = purchaseOrderDao.findPurchaseOrderByPrNumber(purchaseRequest.getPurchaseRequestNumber());
         if(purchaseRequest.getRequestStatus().getValue() <= 2 && !po.isPresent() ){
-            purchaseRequest.setRequestStatus(RequestStatus.DIPROSES);
-            purchaseRequestDao.save(purchaseRequest);
+//            purchaseRequest.setRequestStatus(RequestStatus.DIPROSES);
+//            purchaseRequestDao.save(purchaseRequest);
             PurchaseOrder newPo =  new PurchaseOrder();
             newPo.setOutlet(purchaseRequest.getOutlet());
             newPo.setPoNumber(generatePONumber(purchaseRequest.getPurchaseRequestNumber()));
@@ -89,5 +89,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     @Override
     public Optional<PurchaseOrder> findById(String id) {
         return purchaseOrderDao.findById(id);
+    }
+
+    @Override
+    public Optional<PurchaseOrder> findByPrNumber(String prNumber) {
+        return purchaseOrderDao.findByPrNumber(prNumber);
+    }
+
+    @Override
+    public Optional<PurchaseOrderDetail> findByPurchaseOrderDetailId(String id) {
+        return purchaseOrderDetailDao.findById(id);
     }
 }

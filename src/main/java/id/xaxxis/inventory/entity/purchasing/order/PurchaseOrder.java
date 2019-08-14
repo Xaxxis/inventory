@@ -64,9 +64,12 @@ public class PurchaseOrder extends BaseEntity {
     @Transient
     private Integer totalItems;
 
+
     @PostLoad
     public void calcTotalItems(){
         this.totalItems = purchaseOrderDetails.size();
     }
+
+
 
 }

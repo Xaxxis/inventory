@@ -3,7 +3,6 @@ package id.xaxxis.inventory.service.inventory;
 import id.xaxxis.inventory.dao.inventory.InventoryDao;
 import id.xaxxis.inventory.entity.inventory.Inventory;
 import id.xaxxis.inventory.entity.master.user.User;
-import id.xaxxis.inventory.service.master.user.UserService;
 import id.xaxxis.inventory.service.spesification.inventory.InventorySpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
@@ -19,12 +18,9 @@ public class InventoryServiceImpl implements InventoryService {
 
     private final InventoryDao inventoryDao;
 
-    private final UserService userService;
-
     @Autowired
-    public InventoryServiceImpl(InventoryDao inventoryDao, UserService userService) {
+    public InventoryServiceImpl(InventoryDao inventoryDao) {
         this.inventoryDao = inventoryDao;
-        this.userService = userService;
     }
 
     @Override
@@ -86,6 +82,5 @@ public class InventoryServiceImpl implements InventoryService {
     public DataTablesOutput<Inventory> findAllByOutlet(String outletId) {
         return inventoryDao.findAllByOutlet_OutletId(outletId);
     }
-
 
 }

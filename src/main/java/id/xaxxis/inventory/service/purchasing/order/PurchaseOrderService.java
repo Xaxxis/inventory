@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface PurchaseOrderService {
 
     PurchaseOrder savePurchaseOrder(PurchaseOrder purchaseOrder);
-    PurchaseOrderDetail savePurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail);
+    PurchaseOrderDetail savePurchaseOrderDetail(Optional<PurchaseOrderDetail> purchaseOrderDetail);
 
     DataTablesOutput<PurchaseOrder> findAll(DataTablesInput input);
 
@@ -19,5 +19,9 @@ public interface PurchaseOrderService {
     String generatePONumber(String prNumber);
 
     Optional<PurchaseOrder> findById(String id);
+
+    Optional<PurchaseOrder> findByPrNumber(String prNumber);
+
+    Optional<PurchaseOrderDetail> findByPurchaseOrderDetailId(String id);
 
 }

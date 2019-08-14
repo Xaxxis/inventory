@@ -4,6 +4,7 @@ import id.xaxxis.inventory.dto.purchasing.PurchaseRequestCart;
 import id.xaxxis.inventory.entity.inventory.Inventory;
 import id.xaxxis.inventory.entity.master.suplier.Suplier;
 import id.xaxxis.inventory.entity.purchasing.order.PurchaseOrder;
+import id.xaxxis.inventory.entity.purchasing.order.PurchaseOrderDetail;
 import id.xaxxis.inventory.entity.purchasing.request.PurchaseRequest;
 import id.xaxxis.inventory.entity.purchasing.request.PurchaseRequestItem;
 import id.xaxxis.inventory.enums.RequestStatus;
@@ -20,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,6 +53,7 @@ public class PurchaseController {
         this.purchaseOrderService = purchaseOrderService;
     }
 
+    ////START SUPLIER CONTROLLER\\\\\
     @RequestMapping(value = "/suplier", method = RequestMethod.GET)
     public String suplier(Model model) {
         model.addAttribute("purchaseOpen", "open");
@@ -82,6 +85,9 @@ public class PurchaseController {
         return "redirect:/app/purchasing/suplier";
     }
 
+    ////END SUPLIER CONTROLLER\\\\\
+
+    ////START PURCHASE REQUEST CONTROLLER\\\\\
     @RequestMapping(value = "/request", method = RequestMethod.GET)
     public ModelAndView purchaseRequest() {
         ModelAndView mv = new ModelAndView("purchasing/purchase-request");
@@ -155,6 +161,9 @@ public class PurchaseController {
         return "redirect:/app/purchasing/request";
     }
 
+    ////END PURCHASE REQUEST CONTROLLER\\\\\
+
+
     @RequestMapping(value = "/so/remove/{itemReqId}/{purchaseReqId}", method = RequestMethod.GET)
     public String deleteItemReq(@PathVariable("itemReqId") String itemReqId,
                                 @PathVariable("purchaseReqId") String purchaseReqId){
@@ -162,6 +171,10 @@ public class PurchaseController {
         return "redirect:/app/purchasing/so/revPR?getPR="+purchaseReqId;
     }
 
+
+    ////START PURCHASE ORDER CONTROLLER\\\\\
+
+    //List data purchase Order
     @RequestMapping(value = "/order/list", method = RequestMethod.GET)
     public ModelAndView poList(){
         ModelAndView mv = new ModelAndView("purchasing/po-list");
@@ -172,12 +185,58 @@ public class PurchaseController {
         return mv;
     }
 
-    @RequestMapping(value = "/order/getPo", method = RequestMethod.GET)
-    public ModelAndView getPo(@RequestParam("poId") String poId){
-        ModelAndView mv = new ModelAndView("purchasing/po-detail");
-        Optional<PurchaseOrder> po = purchaseOrderService.findById(poId);
-        mv.addObject("po", po.get());
-        mv.addObject("itemList", po.get().getPurchaseOrderDetails());
+    //Get One Purchase Request for Purchasing
+    @RequestMapping(value = "/order/getPR", method = RequestMethod.GET)
+    public ModelAndView getPo(@RequestParam("number") String prNUmber){
+        ModelAndView mv = new ModelAndView("purchasing/request-detail");
+        PurchaseRequest pr = purchaseRequestService.findByPrNumber(prNUmber);
+        mv.addObject("pr", pr);
+        mv.addObject("itemList", pr.getRequestItemList());
         return mv;
+    }
+
+    //
+    @RequestMapping(value = "/order/reqRevPR", method = RequestMethod.GET)
+    public String reqRevPR(@RequestParam("number") String prId){
+        PurchaseRequest pr = purchaseRequestService.findByPrId(prId);
+        if(pr.getRequestStatus().getValue() < 3){
+            pr.setRequestStatus(RequestStatus.REVISI);
+            purchaseRequestService.savePr(pr);
+            return "redirect:/app/purchasing/order/list";
+        }
+        return "redirect:/app/purchasing/order/getPR?number="+pr.getPurchaseReqId();
+    }
+
+    @RequestMapping(value = "/order/create", method = RequestMethod.GET)
+    public String createPO(Model model, @RequestParam("prId") String prId){
+        PurchaseRequest pr = purchaseRequestService.findByPrId(prId);
+        if(pr.getRequestStatus().getValue() >= 2){
+            purchaseOrderService.createPO(prId);
+            Optional<PurchaseOrder> po = purchaseOrderService.findByPrNumber(pr.getPurchaseRequestNumber());
+            model.addAttribute("po", po.get());
+            model.addAttribute("itemList", po.get().getPurchaseOrderDetails());
+            return "purchasing/po-detail";
+        }
+        return "redirect:/app/purchasing/order/getPR?number="+pr.getPurchaseRequestNumber();
+    }
+
+    @RequestMapping(value = "/order/submit", method = RequestMethod.POST)
+    public String submitAndSavePO(Model model, PurchaseOrder purchaseOrder, PurchaseOrderDetail purchaseOrderDetail,
+                                  @RequestParam("idPo") String poId,
+                                  @RequestParam("sss") List<String> idPoDetail,
+                                  @RequestParam("aaa") List<BigDecimal> itemPrice,
+                                  @RequestParam("action") String action){
+        Optional<PurchaseOrder> po = purchaseOrderService.findById(poId);
+        if(action.equals("Save")){
+            for(int i=0; i < idPoDetail.size(); i++){
+                Optional<PurchaseOrderDetail> poDetail = purchaseOrderService.findByPurchaseOrderDetailId(idPoDetail.get(i));
+                poDetail.get().setItemPrice(itemPrice.get(i));
+                purchaseOrderService.savePurchaseOrderDetail(poDetail);
+            }
+
+        } else if (action.equals("Submit")){
+
+        }
+        return null;
     }
 }

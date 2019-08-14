@@ -4,8 +4,8 @@ public enum RequestStatus {
 
     TERTUNDA(0),
     REVISI(1),
-    DIAJUKAN(2),
-    DIPROSES(3),
+    DIPROSES(2),
+    DIAJUKAN(3),
     DISETUJUI(4),
     DIKIRIM(5),
     SELESAI(6),

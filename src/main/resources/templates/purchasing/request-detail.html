@@ -37,6 +37,10 @@
                         <input type="hidden" th:value="${pr.purchaseReqId}" name="getPR"/>
                         <button type="submit" class="btn btn-sm btn-rounded btn-success float-right">Cek PR by SO</button>
                     </form>
+                    <form sec:authorize="hasAnyRole('ROLE_PURCHASING')" method="get" th:action="@{'/app/purchasing/order/reqRevPR'}">
+                        <input type="hidden" th:value="${pr.purchaseReqId}" name="number"/>
+                        <button type="submit" class="btn btn-sm btn-rounded btn-success float-right">REVISI</button>
+                    </form>
                     Detail Purchase Request
                 </h2>
                 <div class="block">
@@ -97,7 +101,7 @@
                                     <th class="text-center" style="width: 60px;">No</th>
                                     <th>Produk</th>
                                     <th class="text-right" style="width: 120px;">Unit</th>
-                                    <th class="text-center" style="width: 90px;">Qty Diminta</th>
+                                    <th sec:authorize="hasRole('ROLE_SO')" class="text-center" style="width: 90px;">Qty Diminta</th>
                                     <th class="text-center" style="width: 90px;">Qty Diajukan</th>
                                     <th class="text-right" style="width: 120px;">Catatan</th>
                                 </tr>
@@ -105,11 +109,11 @@
                                 <tbody>
                                 <tr th:each="itemReq, iterator : ${itemList}">
                                     <td class="text-center" th:text="${iterator.index + 1}"></td>
-                                    <td><p class="text-muted"><a th:text="${itemReq.inventory.masterItem.itemBarcode}"></a></p>
-                                        <div class="font-w600 mb-5"><a th:text="${itemReq.inventory.masterItem.itemName}"></a></div>
+                                    <td><a class="small"><a th:text="${itemReq.inventory.masterItem.itemBarcode}"></a><br/>
+                                        <a class="font-w600 mb-5"th:text="${itemReq.inventory.masterItem.itemName}"></a></a>
                                     </td>
                                     <td class="text-right"><a th:text="${itemReq.inventory.masterItem.unitItem.unitName}"></a></td>
-                                    <td class="text-center">
+                                    <td sec:authorize="hasRole('ROLE_SO')" class="text-center">
                                         <span class="badge badge-pill badge-primary"><a th:text="${itemReq.qtyReq}"></a></span>
                                     </td>
                                     <td class="text-center">
@@ -123,11 +127,29 @@
                         <!-- END Table -->
 
                         <!-- Footer -->
-                        <p class="text-muted text-center">Thank you very much for doing business with us. We look forward to working with you again!</p>
+                        <h3 class="block-title"><b> Ver.<a th:text="${pr.version}"></a></b><small> revisi terakhir oleh <a th:text="${pr.lastModifiedBy}"></a> pada <a th:text="${pr.lastModifiedDate != null ? #dates.format(pr.lastModifiedDate, 'HH:mm:ss dd-MM-yyyy') : ''}"></a></small></h3>
                         <!-- END Footer -->
                     </div>
                 </div>
                 <!-- END Invoice -->
+                <div  class="form-group col row d-print-none">
+                    <div class="md-10" sec:authorize="hasRole('ROLE_PURCHASING')">
+                        <form method="get" th:action="@{/app/purchasing/order/create}">
+                            <input type="hidden" name="prId" th:value="${pr.purchaseReqId}"/>
+                            <button type="submit" class="btn btn-hero btn-sm btn-rounded btn-noborder btn-warning"><i class="fa fa-sticky-note mr-5"></i>Buat PO</input></button>
+                        </form>
+                    </div>
+                    <div class="md-10">
+                        <a onclick="goBack()" class="btn btn-hero btn-sm btn-rounded btn-noborder btn-alt-secondary">
+                            <i class="fa fa-undo mr-5"></i> Kembali
+                        </a>
+                        <script>
+                            function goBack() {
+                                window.history.back();
+                            }
+                        </script>
+                    </div>
+                </div>
             </div>
             <!-- END Page Content -->
 

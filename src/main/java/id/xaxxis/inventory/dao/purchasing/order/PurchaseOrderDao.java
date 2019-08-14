@@ -19,4 +19,6 @@ public interface PurchaseOrderDao extends DataTablesRepository<PurchaseOrder, St
     DataTablesOutput<PurchaseOrder> findAll(DataTablesInput input, Specification<PurchaseOrder> specification);
 
 
+    Optional<PurchaseOrder> findByPrNumber(String prNumber);
+
 }

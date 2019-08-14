@@ -149,8 +149,6 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
 
     @Override
     public PurchaseRequest savePr(PurchaseRequest purchaseRequest) {
-        purchaseRequest.setRequestStatus(RequestStatus.REVISI);
-        purchaseRequest.setVersion(purchaseRequest.getVersion()+1);
         return purchaseRequestDao.save(purchaseRequest);
     }
 

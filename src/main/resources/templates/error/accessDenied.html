@@ -64,7 +64,7 @@ MAIN CONTENT LAYOUT
                         </div>
                         <h1 class="h2 font-w700 mt-30 mb-10">Oops.. sepertinya kamu gak bisa akses halaman ini</h1>
                         <h2 class="h3 font-w400 text-muted mb-50">Maaf <strong><span sec:authentication="name"></span></strong>, kita memang deket sih, tapi kamu belum bisa akses halaman ini...</h2>
-                        <a class="btn btn-hero btn-rounded btn-alt-secondary" href="/app/emoney/report">
+                        <a class="btn btn-hero btn-rounded btn-alt-secondary" onclick="goBack()">
                             <i class="fa fa-arrow-left mr-10"></i> Kembali
                         </a>
                     </div>
@@ -79,5 +79,10 @@ MAIN CONTENT LAYOUT
 
 <!-- Codebase Core JS -->
 <div th:replace="layout :: body-bottom-scripts"></div>
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
 </body>
 </html>
